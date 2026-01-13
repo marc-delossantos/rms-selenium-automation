@@ -1,0 +1,23 @@
+{
+  "name": "rms-selenium-automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marc-delossantos/rms-selenium-automation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marc-delossantos/rms-selenium-automation/issues"
+  },
+  "homepage": "https://github.com/marc-delossantos/rms-selenium-automation#readme",
+  "description": "",
+  "dependencies": {
+    "selenium-webdriver": "^4.39.0"
+  },
+  "mocha":"^10.2.0"
+}
