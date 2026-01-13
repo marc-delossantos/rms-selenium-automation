@@ -17,7 +17,9 @@
   "homepage": "https://github.com/marc-delossantos/rms-selenium-automation#readme",
   "description": "",
   "dependencies": {
+    "chai": "^6.2.2",
+    "mocha": "^11.7.5",
     "selenium-webdriver": "^4.39.0"
   },
-  "mocha":"^10.2.0"
+  "mocha": "^10.2.0"
 }
