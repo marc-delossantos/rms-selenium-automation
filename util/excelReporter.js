@@ -24,7 +24,7 @@ async function writeResult(testName, status, screenshotPath = '', message = '') 
 
     // IMPORTANT: Always define columns (keys are lost after readFile)
     worksheet.columns = [
-        { header: 'Date', key: 'date', width: 25 },
+        { header: 'Date/Time', key: 'date', width: 25 },
         { header: 'Test Name', key: 'testName', width: 30 },
         { header: 'Status', key: 'status', width: 15 },
         { header: 'Message', key: 'message', width: 50 },

@@ -1,14 +1,12 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
 
 async function loginTest() {
     let driver;
-    //const testlogin = 'TestLogin';
+
     try {
         driver = await new Builder().forBrowser('chrome').build();
         await driver.manage().window().maximize();
@@ -42,12 +40,14 @@ async function loginTest() {
         await loginButton.click();
 
         // --- Wait for dashboard/profile
-        const profile = await driver.wait(
+        /*const profile = await driver.wait(
             until.elementLocated(By.id('dropdown-profile')),
             5000
         );
         await driver.wait(until.elementIsVisible(profile), 10000);
         assert.strictEqual(await profile.isDisplayed(), true);
+        */
+        await driver.wait(until.urlContains('resource-utilization'), 10000); //wait for screen to load
 
         console.log(' Login test passed');
 
