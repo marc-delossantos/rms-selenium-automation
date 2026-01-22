@@ -38,24 +38,6 @@ async function dataCreationIA() {
         const ia_name = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/div/input'));
         const date = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/input'));
         
-       // const expectedCategoryOptions = ['Select Category','Internal Project', 'Operations','Study/Training'];
-        /*const actualCategoryOptions = [];
-            for (const option of categoryOptions) {
-             actualCategoryOptions.push(await option.getText());
-            }
-            assert.deepStrictEqual(actualCategoryOptions, expectedCategoryOptions); //check category dropdown option list
-        */
-        /*const expectedBUOptions = ['Select Business Unit','ACTION', 'ACTIONCEB','ACTIONMNL','ADMIN','BUSINESSDEVELOPMENT','BUSINESSOPERATIONS','C4I','CEBUOPERATIONS',
-            'CLIENT','CORPORATEPLANNING','D2','Department Department 12','DEV2','DEV3','DEV5','DEV6','DEVA','DEVB','DEVC','DEVD','DEVE','DEVF','DEVG',
-            'DEVH','DEVI','DEVJ','DEVK','DEVL','DEVM','DEVN','DEVO','DEVP','DEVQ','DX','EMBSOL','ESD','ESDMGMT','FINANCE','HAKEN',
-            'HRD','MIS','QANDS','RESOURCEMANAGEMENT','SOLUTIONDEVELOPMENT'];
-        */
-        /*const actualBUOptions = [];
-            for (const option of BUOptions) {
-             actualBUOptions.push(await option.getText());
-            }
-            assert.deepStrictEqual(actualBUOptions, expectedBUOptions); //check BU dropdown option list
-        */
         const remark = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/div/div/textarea[1]'));
         const saveBTN = await driver.findElement(By.xpath('//*[@id="root"]/div/div[2]/div[2]/div/div/div[2]/div[2]/button[2]'))
         
