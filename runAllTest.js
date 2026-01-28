@@ -7,6 +7,9 @@ const { dataCreationIA } = require('./tests/createNewIA');
 
     await dataCreationIA();
     console.log('test_002 finished----you may check report logs @excelLog folder-----');
+
+    // await updateDataIA();
+    console.log('test_003 finished----you may check report logs @excelLog folder-----');
 })();
     
 

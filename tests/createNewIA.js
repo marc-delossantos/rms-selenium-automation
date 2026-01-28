@@ -1,4 +1,4 @@
-const { Builder, By, until } = require('selenium-webdriver');
+const { Builder, By, until, Key } = require('selenium-webdriver');
 const assert = require('assert');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
@@ -35,18 +35,18 @@ async function dataCreationIA() {
         // --- Wait for Resource & Project Management/Internal Activity/Create Internal Activity
         await driver.wait(until.urlContains('create-internal-activities'), 10000); //wait for screen to load
 
-        const ia_name = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/div/input'));
-        const date = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/input'));
+        const ia_name = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/div/input'),10000);
+        const date = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/input',10000));
         
-        const remark = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/div/div/textarea[1]'));
+        const remark = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/div/div/textarea[1]'),10000);
         const saveBTN = await driver.findElement(By.xpath('//*[@id="root"]/div/div[2]/div[2]/div/div/div[2]/div[2]/button[2]'))
         
         //create internal activity form
-        await ia_name.sendKeys('Sample2');
+        await driver.sleep(3000);
+        await ia_name.sendKeys('Sample1');
         await date.sendKeys('2026/01/21 - 2026/02/28');
         const categoryDropdown = await driver.findElement(
-        By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[2]/div/div/div'),10000
-        );
+        By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[2]/div/div/div'),10000);
 
         // Category dropdown
         await categoryDropdown.click(); // open dropdown
@@ -56,37 +56,35 @@ async function dataCreationIA() {
 
         //BU dropdown
         const buDropdown = await driver.findElement(
-        By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/div'),10000
-        );
+        By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/div'),10000);
         await buDropdown.click(); // open dropdown
         await driver.findElement(
-        By.xpath("/html/body/div[2]/div[3]/ul/li[2]") // select "ACTION"
+        By.xpath("/html/body/div[2]/div[3]/ul/li[5]") // select "ACTION"
         ).click();
 
         await remark.sendKeys('testing only');
-
-        // --- Assertions
-        const iaNameValue = await ia_name.getAttribute('value');
-        assert.strictEqual(iaNameValue,'Sample2','IA Name input value is incorrect');
-
-        const dateValue = await date.getAttribute('value');
-        assert.strictEqual(dateValue,'2026/01/21 - 2026/02/28','Date input value is incorrect');
-
-        const selectedCategoryText = await categoryDropdown.getText();
-        assert.strictEqual(selectedCategoryText.trim(),'Internal Project','Category dropdown selection failed');
-
-        const selectedBUText = await buDropdown.getText();
-        assert.strictEqual(selectedBUText.trim(),'ACTION','BU dropdown selection failed');
-
-        const remarkValue = await remark.getAttribute('value');
-        assert.strictEqual(remarkValue,'testing only','Remark textarea value is incorrect');
         await saveBTN.click();
+
+        await driver.actions().sendKeys(Key.ENTER).perform();
         console.log(` Creating data Test successful!`);
 
-        // --- Wait for Resource & Project Management/Internal Activity
+        //Wait for Resource & Project Management/Internal Activity
         await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
 
-        // --- Take screenshot and embed into Excel
+        // assertion check table
+        const searchData = await driver.findElement(By.xpath('//*[@id="root"]/div/div[2]/div[2]/div/div/div[2]/div[1]/div/div[2]/div[1]/input'));
+        await searchData.clear();
+        await searchData.sendKeys('Sample1');
+        
+        const updatedRow = await driver.wait(until.elementLocated(By.xpath('//*[@id="root"]/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div]')),10000);
+        const rowText = await updatedRow.getText();
+        
+        assert.ok(rowText.includes('Sample2'));
+        assert.ok(rowText.includes('Internal Project'));
+        assert.ok(rowText.includes('ACTION'));
+        assert.ok(rowText.includes('2026/01/21'));
+
+        //Take screenshot and embed into Excel
         const screenshotPath = await takeScreenshot(driver, 'test_001');
         await writeResult('test_002', 'PASS', screenshotPath); // <-- Pass screenshot path
 
@@ -106,3 +104,6 @@ async function dataCreationIA() {
     }
 }
 module.exports = { dataCreationIA };
+
+
+
