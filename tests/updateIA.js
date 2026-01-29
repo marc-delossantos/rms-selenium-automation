@@ -34,7 +34,7 @@ async function updateDataIA() {
         const viewBTN = await driver.findElement(By.xpath('//html/body/div[2]/button'))
         await viewBTN.click();
 
-        // --- Wait for Resource & Project Management/Internal Activity/Update Internal Activity
+        // Wait for Resource & Project Management/Internal Activity/Update Internal Activity
         await driver.wait(until.urlContains('update-internal-activities'), 10000); //wait for screen to load
 
         const ia_name = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/div/input'));
@@ -55,13 +55,11 @@ async function updateDataIA() {
 
         // Category dropdown
         await categoryDropdown.click(); // open dropdown
-        await driver.findElement(
-        By.xpath("/html/body/div[2]/div[3]/ul/li[2]") // select "Internal Project"
+        await driver.findElement(By.xpath("/html/body/div[2]/div[3]/ul/li[2]") // select "Internal Project"
         ).click();
 
         //BU dropdown
-        const buDropdown = await driver.findElement(
-        By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/div'),10000
+        const buDropdown = await driver.findElement(By.xpath('/html/body/div/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/div'),10000
         );
         await buDropdown.click(); // open dropdown
         await driver.findElement(By.xpath("/html/body/div[2]/div[3]/ul/li[5]") // select "ACTION"
