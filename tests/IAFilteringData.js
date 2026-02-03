@@ -30,31 +30,29 @@ async function filterData() {
         await sideMenuIA.click();
 
         await driver.wait(until.urlContains('internal-activities'), 10000);
+        await driver.sleep(5000);
+        /* ================= SD Group DROPDOWN ================= */
 
-        /* ================= CATEGORY DROPDOWN ================= */
-
-        const expectedCategoryOptions = [
-            'Select Category',
-            'Internal Project',
-            'Operations',
-            'Study/Training'
+        const expectedSdGrpOptions = [
+            '',
+            '',
+            ''
         ];
 
-        const categoryOptions = await driver.findElements(
-            By.xpath('//select[@id="category"]//option')
+        const sdGrpOptions = await driver.findElements(
+            By.xpath("//button[.//span[text()='SD Group']]")
         );
 
-        const actualCategoryOptions = [];
-        for (const option of categoryOptions) {
-            actualCategoryOptions.push((await option.getText()).trim());
+        const actualSdGrpOptions = [];
+        for (const option of sdGrpOptions) {
+            actualSdGrpOptions.push((await option.getText()).trim());
         }
 
-        assert.deepStrictEqual(actualCategoryOptions, expectedCategoryOptions);
+        assert.deepStrictEqual(actualSdGrpOptions, expectedSdGrpOptions);
 
         /* ================= BU DROPDOWN ================= */
 
         const expectedBUOptions = [
-            'Select Business Unit',
             'ACTION',
             'ACTIONCEB',
             'ACTIONMNL',
@@ -102,7 +100,7 @@ async function filterData() {
         ];
 
         const BUOptions = await driver.findElements(
-            By.xpath('//select[@id="businessUnit"]//option')
+            By.xpath("//button[.//span[text()='Business Unit']]")
         );
 
         const actualBUOptions = [];
@@ -111,6 +109,43 @@ async function filterData() {
         }
 
         assert.deepStrictEqual(actualBUOptions, expectedBUOptions);
+
+        /* ================= CATEGORY DROPDOWN ================= */
+
+        const expectedCategoryOptions = [
+            'Internal Project',
+            'Operations',
+            'Study/Training'
+        ];
+
+        const categoryOptions = await driver.findElements(
+            By.xpath("//button[.//span[text()='Category']]")
+        );
+
+        const actualCategoryOptions = [];
+        for (const option of categoryOptions) {
+            actualCategoryOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualCategoryOptions, expectedCategoryOptions);
+
+         /* ================= STATUS DROPDOWN ================= */
+
+        const expectedStatusOptions = [
+            'Active',
+            'Inactive'
+        ];
+
+        const statusOptions = await driver.findElements(
+            By.xpath("//button[.//span[text()='Status']]")
+        );
+
+        const actualStatusOptions = [];
+        for (const option of statusOptions) {
+            actualSdGrpOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualStatusOptions, expectedStatusOptions);
 
         await writeResult('test_004', 'PASSED');
 
