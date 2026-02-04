@@ -1,5 +1,7 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const assert = require('assert');
+const { loginSelectors } = require('../util/selector');
+const data = require('../data/inputData');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -14,11 +16,9 @@ async function loginTest() {
         await driver.get('https://test.rms2.awsys-i.com/login');
 
         // --- Locate elements
-        const emailInput = await driver.findElement(By.id('floatingInput'));
-        const passwordInput = await driver.findElement(By.id('floatingPassword'));
-        const loginButton = await driver.findElement(
-            By.xpath('//*[@id="root"]/div/div[2]/div/div[2]/form/div[3]/button[2]')
-        );
+        const emailInput = await driver.findElement(loginSelectors.emailInput);
+        const passwordInput = await driver.findElement(loginSelectors.passwordInput);
+        const loginButton = await driver.findElement(loginSelectors.loginButton);
 
         // --- Assertions
         assert.strictEqual(await emailInput.isDisplayed(), true);
@@ -28,12 +28,12 @@ async function loginTest() {
         // --- Input credentials
         await emailInput.clear();
         await passwordInput.clear();
-        await emailInput.sendKeys('marc.delossantos@awsys-i.com');
-        await passwordInput.sendKeys('jeffPassword123..');
+        await emailInput.sendKeys(data.login.email);
+        await passwordInput.sendKeys(data.login.password);
 
         assert.strictEqual(
             await emailInput.getAttribute('value'),
-            'marc.delossantos@awsys-i.com'
+            data.login.email
         );
 
         // --- Click login
