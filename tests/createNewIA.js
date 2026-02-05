@@ -79,7 +79,7 @@ async function dataCreationIA() {
         await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
 
         // assert table
-        await assertTable(driver,categoryValue,buValue,startDate,endDate);
+        await assertTable(driver,data.createData.name,categoryValue,buValue,startDate,endDate);
 
         //Take screenshot and embed into Excel
         const screenshotPath = await takeScreenshot(driver, 'test_002');

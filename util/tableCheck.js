@@ -3,8 +3,9 @@ const assert = require('assert');
 const { internalActivity } = require('../util/selector');
 const data = require('../data/inputData');
 
-async function assertTable(browser,value1,value2,date1,date2) {
+async function assertTable(browser,name,value1,value2,date1,date2) {
         const driver = browser;
+        const nn = name;
         const categoryValue = value1;
         const buValue = value2;
         const startDate = date1;
@@ -13,7 +14,7 @@ async function assertTable(browser,value1,value2,date1,date2) {
         // assertion check table
         const searchData = await driver.findElement(internalActivity.searchBox);
         await searchData.clear();
-        await searchData.sendKeys(data.searchData.searchKeyword1);
+        await searchData.sendKeys(nn);
         
         await driver.sleep(5000);
         // get the first matching row dynamically
@@ -30,7 +31,7 @@ async function assertTable(browser,value1,value2,date1,date2) {
         console.log('Row Values:', rowValues);
 
         // now assert based on the expected data
-        assert.ok(rowValues.some(v => v.includes(data.createData.name)), 'Name not found in row');
+        assert.ok(rowValues.some(v => v.includes(nn)), 'Name not found in row');
         assert.ok(rowValues.some(v => v.includes(categoryValue)), 'Category not found in row');
         assert.ok(rowValues.some(v => v.includes(buValue)), 'BU not found in row');
         /** comment out 1st while there is an issue regarding with date */
