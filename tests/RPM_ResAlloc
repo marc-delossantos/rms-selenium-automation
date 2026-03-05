@@ -1,0 +1,303 @@
+const { Builder, By, until, Key } = require('selenium-webdriver');
+const data = require('../data/inputData');
+const { login } = require('../util/login');
+const {assertTable} = require('../util/tableCheck');
+const { sideMenu } = require('../util/selector');
+const { RPM_ResAlloc } = require('../util/selector');
+const { writeResult } = require('../util/excelReporter');
+const { takeScreenshot } = require('../util/screenshot');
+
+async function IT_001() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const screenshotPath = await takeScreenshot(driver, 'test_001');
+        await writeResult('RPM:ResAlloc_test_IT_001', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_001');
+            await writeResult('RPM:ResAlloc_test_IT_001', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_002() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Internal Activity
+        await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        // check elements
+
+        const breadcrumbElements = await driver.findElements(By.xpath("//nav[@aria-label='breadcrumb']//li"));
+        const actualBreadcrumbs = [];
+        for (const item of breadcrumbElements) {
+        actualBreadcrumbs.push((await item.getText()).trim());
+        }
+        assert.deepStrictEqual(actualBreadcrumbs, expectedBreadcrumbs);
+        console.log(" Breadcrumbs are correct");
+        
+        const buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Business Units");
+        console.log(" Business Units filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Allocation Type']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Allocation Type");
+        console.log(" Allocation Type filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Nihongo Level']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Nihongo Level");
+        console.log(" Nihongo Level filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Current Assignment']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Current Assignment");
+        console.log(" Current Assignment filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Core Skills']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Core Skills");
+        console.log(" Core Skills filter label is correct");        
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Position']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Position");
+        console.log(" Position filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='ACTION Batch']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"ACTION Batch");
+        console.log(" ACTION Batch filter label is correct");
+
+        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Show/Hide Cloumns']"));
+        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await buFilterLabel.getText()).trim(),"Show/Hide Cloumns");
+        console.log(" Show/Hide Cloumns filter label is correct");
+
+        const clearFilterBtn = await driver.findElement(RPM_ResAlloc.clearFilterBtn);
+        assert.strictEqual(await clearFilterBtn.isDisplayed(), true);
+        console.log(" Clear All Filters button is present");
+
+        const searchBox = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.searchBox),
+            5000);
+        assert.strictEqual(await searchBox.isDisplayed(), true);
+        assert.strictEqual(await searchBox.isEnabled(), true);
+        console.log(" Search box is present and ready for input");
+
+        const exportBtn = await driver.wait(until.elementLocated(RPM_ResAlloc.exportBtn),5000);
+        assert.strictEqual(await exportBtn.isDisplayed(), true);
+        assert.strictEqual(await exportBtn.isEnabled(), true);
+        console.log(" Export Excel button is present and clickable");
+
+        const expectedColumns = [
+        "Action",
+        "Employee Number",
+        "Name",
+        "NickName",
+        "Action Batch",
+        "Gender",
+        "Position",
+        "BU Official",
+        "BU Assigned",
+        "Project Assignments",
+        "Current Assignment",
+        "Internal Activities",
+        "Assigned Until",
+        "Efficiency",
+        "YoE(IND)",
+        "YoE(AWS)",
+        "YoE(JPN)",
+        "Onsite Pref",
+        "Nihongo",
+        "Certifications",
+        "Core Skills",
+        "Status",
+        "Allocation"
+        ];
+
+        const headers = await driver.findElements(RPM_ResAlloc.tableColumns);
+        const headerFields = [];
+        for (const h of headers) {
+            const field = await h.getAttribute("data-field");
+            if (field) headerFields.push(field);
+        }
+        console.log("Columns found:", headerFields);
+        // Assert columns match
+        const allColumnsPresent = expectedColumns.every(col => headerFields.includes(col));
+        console.log("All expected columns present:", allColumnsPresent);
+
+        const burgerIcon = await driver.wait(
+        until.elementLocated(sideMenu.burgerIcon),5000);
+        const isDisplayed = await burgerIcon.isDisplayed();
+        console.log("Burger button present:", isDisplayed);
+
+        const screenshotPath = await takeScreenshot(driver, 'test_002');
+        await writeResult('RPM:ResAlloc_test_IT_002', 'PASS', screenshotPath);
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_002');
+            await writeResult('RPM:ResAlloc_test_IT_002', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_004() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const search = await driver.findElement(RPM_ResAlloc.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        //assert
+        await driver.wait(until.elementsLocated(RPM_ResAlloc.tableColumns), 10000);
+        let rows = await driver.findElements(RPM_ResAlloc.tableColumns);
+        let matchFound = false;
+
+        for (let row of rows) {
+            let nameCell = await row.findElement(RPM_ResAlloc.tableName);
+            let cellText = await nameCell.getText();
+
+            if (cellText.includes(keyword)) {
+                matchFound = true;
+                break;
+            }
+        }
+        assert.ok(matchFound, `No table row contains the keyword: ${keyword}`);
+        console.log("Keyword found in table!");
+
+        const screenshotPath = await takeScreenshot(driver, 'test_004');
+        await writeResult('RPM:ResAlloc_test_IT_004', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_004');
+            await writeResult('RPM:ResAlloc_test_IT_004', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_005() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const buFilter = await driver.findElement(RPM_ResAlloc.buUnitsDropDown);
+        await buFilter.click();
+        const clearFilter = await driver.findElement(RPM_ResAlloc.clearFilter);
+        await clearFilter.click();
+        const selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.buOpt}']]`));
+        await selectOption.click();
+
+        const allocType = await driver.findElement(RPM_ResAlloc.allocTypeDropDown);
+        await allocType.click();
+        await clearFilter.click();
+        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.allocType}']]`));
+        await selectOption.click();
+
+        const nihongoLvl = await driver.findElement(RPM_ResAlloc.nihongoLvlDropDown);
+        await nihongoLvl.click();
+        await clearFilter.click();
+        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.nihongoLvl}']]`));
+        await selectOption.click();
+
+        const currAssignment = await driver.findElement(RPM_ResAlloc.currAssgnDropDown);
+        await currAssignment.click();
+        await clearFilter.click();
+        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
+        await selectOption.click();
+
+
+        const screenshotPath = await takeScreenshot(driver, 'test_005');
+        await writeResult('RPM:ResAlloc_test_IT_005', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_005');
+            await writeResult('RPM:ResAlloc_test_IT_005', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+module.exports = { IT_001, IT_002,IT_004,IT_005 };

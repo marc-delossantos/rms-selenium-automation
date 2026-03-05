@@ -26,9 +26,12 @@ async function updateDataIA() {
         await searchData.clear();
         await searchData.sendKeys(data.createData.name);
         // -- navigate to data ---
-        const optionBTN = await driver.findElement(internalActivity.optBTN);
+
+        await driver.sleep(3000);
+        const optionBTN = await driver.wait(until.elementLocated(internalActivity.optBTN),10000);
         await optionBTN.click();
-        const viewBTN = await driver.findElement(internalActivity.viewBTN)
+        await driver.sleep(3000);
+        const viewBTN = await driver.wait(until.elementLocated(internalActivity.viewBTN),5000);
         await viewBTN.click();
 
         // Wait for Resource & Project Management/Internal Activity/Update Internal Activity
@@ -36,13 +39,13 @@ async function updateDataIA() {
         
         //Update Internal Activity form
         await driver.sleep(1000);
-        const ia_name = await driver.findElement(internalActivity.name);
-        await ia_name.clear();
+        const ia_name = await driver.wait(until.elementLocated(internalActivity.up_name), 10000);
+        await ia_name.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.BACK_SPACE);
         await ia_name.sendKeys(data.updateData.name);
 
         await driver.sleep(1000);
-        const date = await driver.findElement(internalActivity.date);
-        await date.clear();
+        const date = await driver.wait(until.elementLocated(internalActivity.up_date), 10000);
+        await date.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.BACK_SPACE);
         await date.sendKeys(data.updateData.date);
         await driver.actions().sendKeys(Key.ENTER).perform();
         let value = await date.getAttribute("value");
@@ -50,25 +53,25 @@ async function updateDataIA() {
         const [startDate, endDate] = value.split('-').map(date => date.trim());
 
         // Category dropdown
-        const categoryDropdown = await driver.findElement(internalActivity.category);
         await driver.sleep(3000);
+        const categoryDropdown = await driver.findElement(internalActivity.category);
         await categoryDropdown.click(); // open dropdown
         const categoryValue = await categoryDropdown.getText();
         await driver.findElement(internalActivity.selCategoryOpt2).click();// select "Operation"
 
         //BU dropdown
-        const buDropdown = await driver.findElement(internalActivity.b_unit);
         await driver.sleep(3000);
+        const buDropdown = await driver.findElement(internalActivity.b_unit);
         await buDropdown.click(); // open dropdown
         const buValue = await buDropdown.getText();
-        await driver.findElement(internalActivity.selB_unitOpt2).click();// select "DEV A"
+        await driver.findElement(internalActivity.selB_unitOpt2).click();
 
         const remark = await driver.findElement(internalActivity.remarks);
-        await remark.clear();
+        await remark.sendKeys(Key.chord(Key.CONTROL, 'a'), Key.BACK_SPACE);
         await remark.sendKeys(data.updateData.remarks);
 
-        const saveBTN = await driver.findElement(internalActivity.saveBTN)
-        await saveBTN.click();
+        const upBTN = await driver.findElement(internalActivity.upBTN)
+        //await upBTN.click();
         
         //=== SYSTEM ALERT POP-UP CLICK OK ===
         await driver.wait(until.alertIsPresent(), 5000);

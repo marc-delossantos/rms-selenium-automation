@@ -1,5 +1,9 @@
 const { Builder, By, until, Key } = require('selenium-webdriver');
+const data = require('../data/inputData');
 const assert = require('assert');
+const { login } = require('../util/login');
+const { sideMenu } = require('../util/selector');
+const { internalActivity } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -10,38 +14,19 @@ async function filterData() {
         driver = await new Builder().forBrowser('chrome').build();
         await driver.manage().window().maximize();
 
-        await driver.get('https://test.rms2.awsys-i.com/login');
+        await login(driver); //go login
 
-        const emailInput = await driver.findElement(By.id('floatingInput'));
-        const passwordInput = await driver.findElement(By.id('floatingPassword'));
-        const loginButton = await driver.findElement(
-            By.xpath('//button[contains(text(),"Login")]')
-        );
-
-        await emailInput.sendKeys('marc.delossantos@awsys-i.com');
-        await passwordInput.sendKeys('jeffPassword123..');
-        await loginButton.click();
-
-        await driver.wait(until.urlContains('resource-utilization'), 10000);
-
-        const sideMenuIA = await driver.findElement(
-            By.xpath('//a[contains(text(),"Internal Activity")]')
-        );
+        const sideMenuIA = await driver.findElement(sideMenu.internalActivity);
         await sideMenuIA.click();
 
-        await driver.wait(until.urlContains('internal-activities'), 10000);
-        await driver.sleep(5000);
+        // --- Wait for Resource & Project Management/Internal Activity
+        await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
+
         /* ================= SD Group DROPDOWN ================= */
 
-        const expectedSdGrpOptions = [
-            '',
-            '',
-            ''
-        ];
+        const expectedSdGrpOptions = data.dropdown.sdOptions;
 
-        const sdGrpOptions = await driver.findElements(
-            By.xpath("//button[.//span[text()='SD Group']]")
-        );
+        const sdGrpOptions = await driver.findElements(internalActivity.sdGrp);
 
         const actualSdGrpOptions = [];
         for (const option of sdGrpOptions) {
@@ -49,59 +34,12 @@ async function filterData() {
         }
 
         assert.deepStrictEqual(actualSdGrpOptions, expectedSdGrpOptions);
-
+        console.log('Dropdown options match expected values!');
         /* ================= BU DROPDOWN ================= */
 
-        const expectedBUOptions = [
-            'ACTION',
-            'ACTIONCEB',
-            'ACTIONMNL',
-            'ADMIN',
-            'BUSINESSDEVELOPMENT',
-            'BUSINESSOPERATIONS',
-            'C4I',
-            'CEBUOPERATIONS',
-            'CLIENT',
-            'CORPORATEPLANNING',
-            'D2',
-            'Department Department 12',
-            'DEV2',
-            'DEV3',
-            'DEV5',
-            'DEV6',
-            'DEVA',
-            'DEVB',
-            'DEVC',
-            'DEVD',
-            'DEVE',
-            'DEVF',
-            'DEVG',
-            'DEVH',
-            'DEVI',
-            'DEVJ',
-            'DEVK',
-            'DEVL',
-            'DEVM',
-            'DEVN',
-            'DEVO',
-            'DEVP',
-            'DEVQ',
-            'DX',
-            'EMBSOL',
-            'ESD',
-            'ESDMGMT',
-            'FINANCE',
-            'HAKEN',
-            'HRD',
-            'MIS',
-            'QANDS',
-            'RESOURCEMANAGEMENT',
-            'SOLUTIONDEVELOPMENT'
-        ];
+        const expectedBUOptions = data.dropdown.buOptions;
 
-        const BUOptions = await driver.findElements(
-            By.xpath("//button[.//span[text()='Business Unit']]")
-        );
+        const BUOptions = await driver.findElements(internalActivity.bu);
 
         const actualBUOptions = [];
         for (const option of BUOptions) {
@@ -109,18 +47,12 @@ async function filterData() {
         }
 
         assert.deepStrictEqual(actualBUOptions, expectedBUOptions);
-
+        console.log('Dropdown options match expected values!');
         /* ================= CATEGORY DROPDOWN ================= */
 
-        const expectedCategoryOptions = [
-            'Internal Project',
-            'Operations',
-            'Study/Training'
-        ];
+        const expectedCategoryOptions = data.dropdown.category;
 
-        const categoryOptions = await driver.findElements(
-            By.xpath("//button[.//span[text()='Category']]")
-        );
+        const categoryOptions = await driver.findElements(internalActivity.category);
 
         const actualCategoryOptions = [];
         for (const option of categoryOptions) {
@@ -128,17 +60,12 @@ async function filterData() {
         }
 
         assert.deepStrictEqual(actualCategoryOptions, expectedCategoryOptions);
-
+        console.log('Dropdown options match expected values!');
          /* ================= STATUS DROPDOWN ================= */
 
-        const expectedStatusOptions = [
-            'Active',
-            'Inactive'
-        ];
+        const expectedStatusOptions = data.dropdown.status;
 
-        const statusOptions = await driver.findElements(
-            By.xpath("//button[.//span[text()='Status']]")
-        );
+        const statusOptions = await driver.findElements(internalActivity.status);
 
         const actualStatusOptions = [];
         for (const option of statusOptions) {
@@ -146,7 +73,7 @@ async function filterData() {
         }
 
         assert.deepStrictEqual(actualStatusOptions, expectedStatusOptions);
-
+        console.log('Dropdown options match expected values!');
         await writeResult('test_004', 'PASSED');
 
     } catch (error) {

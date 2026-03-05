@@ -6,19 +6,98 @@ const inputData = {
   },
 
   createData: {
-    name: "Sample",
+    name: "DX testing sample",
     date: "2026/01/21 - 2026/02/28",
     remarks: "testing only"
   },
     updateData: {
-    name: "Sample2",
-    date: "2026/01/02 - 2026/03/28",
+    name: "DX testing sample2",
+    date: "2026/02/02 - 2026/03/29",
     remarks: "testing only update"
   },
 
   searchData: {
     searchKeyword1: "Sample1"
+  },
+  dropdown:{
+    sdOptions:['ヘンタイ',
+              'SD1',
+              'SD2',
+              'SD3TEST',
+              'SD4',
+              'SD5'
+    ],
+    buOptions:[
+               'ACTION',
+               'ACTIONCEB',
+               'ACTIONMNL',
+               'ADMIN',
+               'BUSINESSDEVELOPMENT',
+               'BUSINESSOPERATIONS',
+               'C4I',
+               'CEBUOPERATIONS',
+               'CLIENT',
+               'CORPORATEPLANNING',
+               'D2',
+               'Department Department 12',
+               'DEV2',
+               'DEV3',
+               'DEV5',
+               'DEV6',
+               'DEVA',
+               'DEVB',
+               'DEVC',
+               'DEVD',
+               'DEVE',
+               'DEVF',
+               'DEVG',
+               'DEVH',
+               'DEVI',
+               'DEVJ',
+               'DEVK',
+               'DEVL',
+               'DEVM',
+               'DEVN',
+               'DEVO',
+               'DEVP',
+               'DEVQ',
+               'DX',
+               'EMBSOL',
+               'ESD',
+               'ESDMGMT',
+               'FINANCE',
+               'HAKEN',
+               'HRD',
+               'MIS',
+               'QANDS',
+               'RESOURCEMANAGEMENT',
+               'SOLUTIONDEVELOPMENT'
+              ],
+    category:[
+              'Internal Project',
+              'Operations',
+              'Study/Training'
+            ],
+    status:[
+            'Active',
+            'Inactive'
+    ],
+  },
+
+  
+  dropdownValue:{
+    categoryOpt: 'Internal Project',
+    buOpt: 'ACTION',
+    categoryOpt_up: 'Operations',
+    buOpt_up: 'DEVA',
+    allocType:'AVAILABLE'
+
+  },
+
+  searchSampData:{
+    searchKeyword1:'Marc Jeffson',
   }
+
 
 };
 

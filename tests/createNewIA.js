@@ -40,6 +40,7 @@ async function dataCreationIA() {
         await date.clear();
         await date.sendKeys(data.createData.date);
         await driver.actions().sendKeys(Key.ENTER).perform();
+        
         let value = await date.getAttribute("value");
         // Split and trim date
         const [startDate, endDate] = value.split('-').map(date => date.trim());
