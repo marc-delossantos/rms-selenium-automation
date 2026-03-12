@@ -282,6 +282,12 @@ async function IT_005() {
         selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
         await selectOption.click();
 
+        const coreSkill = await driver.findElement(RPM_ResAlloc.coreSkillDropDown);
+        await coreSkill.click();
+        await clearFilter.click();
+        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
+        await selectOption.click();
+
 
         const screenshotPath = await takeScreenshot(driver, 'test_005');
         await writeResult('RPM:ResAlloc_test_IT_005', 'PASS', screenshotPath);

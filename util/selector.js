@@ -13,14 +13,31 @@ const loginSelectors = {
     loginButton: By.xpath("//button[contains(@class,'login-btn')]")
 };
 const RPM_ResAlloc = {
-    clearFilterBtn: By.xpath("//button[normalize-space()='Clear All Filters']"),
-    searchBox: By.xpath("//input[@placeholder='Search all columns']"),
-    exportBtn: By.xpath("//button[contains(@class,'btn-export-excel')]"),
-    tableColumns: By.xpath("//div[@role='columnheader']"),
-    tableName:By.xpath("./div[@aria-colindex='3']"),
-    clearFilter: By.xpath(`//button[contains(@class,'action-button') and normalize-space()='Clear Filter']`),
-    buUnitsDropDown:By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div/button`),
-    allocTypeDropDown: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div/button/div`)
+    SUBMENU:{
+
+    },
+    BTN:{
+        clearFilterBtn: By.xpath("//button[normalize-space()='Clear All Filters']"),
+        exportBtn: By.xpath("//button[contains(@class,'btn-export-excel')]"),
+        clearFilter: By.xpath(`//button[contains(@class,'action-button') and normalize-space()='Clear Filter']`),
+        actionBtn:"",
+        pageFwd:"",
+        pageBck:"",
+        sort:"",
+    },
+    TXTBX:{
+        searchBox: By.xpath("//input[@placeholder='Search all columns']"),
+    },
+    DRPDWN:{
+        buUnitsDropDown:By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div/button`),
+        allocTypeDropDown: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div/button/div`),
+        showHide:"",
+        rowPerPage:""
+    },
+    TBL:{
+        tableColumns: By.xpath("//div[@role='columnheader']"),
+        tableName:By.xpath("./div[@aria-colindex='3']"),
+    },  
 };
 
 const internalActivity = {
