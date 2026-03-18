@@ -73,6 +73,36 @@ const inputData = {
                'RESOURCEMANAGEMENT',
                'SOLUTIONDEVELOPMENT'
               ],
+    allocationoptions:[],
+    nihongo:[],
+    currentAssignment:[],
+    coreSkills:[],
+    position:[],
+    ACTION:[],
+    showHide_RPMResourceAlloc:[
+      'Employee Number',
+      'Name',
+      'Nickname',
+      'Action Batch',
+      'Gender',
+      'Position',
+      'BU Official',
+      'BU Assigned',
+      'Project Assignments',
+      'Current Assignment',
+      'Internal Activities',
+      'Assigned Until',
+      'Efficiency',
+      'YoE(IND)',
+      'YoE(AWS)',
+      'YoE(JPN)',
+      'Onsite Pref',
+      'Nihongo',
+      'Certifications',
+      'Core Skills',
+      'Status',
+      'Allocation',
+    ],
     category:[
               'Internal Project',
               'Operations',
@@ -82,6 +112,12 @@ const inputData = {
             'Active',
             'Inactive'
     ],
+    rowCount:[
+            '30',
+            '50',
+            '70',
+            '100'
+    ]
   },
 
   

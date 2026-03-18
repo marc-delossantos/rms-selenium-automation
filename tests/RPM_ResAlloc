@@ -5,6 +5,7 @@ const {assertTable} = require('../util/tableCheck');
 const { sideMenu } = require('../util/selector');
 const { RPM_ResAlloc } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');
+const { clickUntil } = require('../util/clickButtonUntil');
 const { takeScreenshot } = require('../util/screenshot');
 
 async function IT_001() {
@@ -65,52 +66,52 @@ async function IT_002() {
         assert.deepStrictEqual(actualBreadcrumbs, expectedBreadcrumbs);
         console.log(" Breadcrumbs are correct");
         
-        const buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        const FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Business Units");
+            (await FilterLabel.getText()).trim(),"Business Units");
         console.log(" Business Units filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Allocation Type']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Allocation Type']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Allocation Type");
+            (await FilterLabel.getText()).trim(),"Allocation Type");
         console.log(" Allocation Type filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Nihongo Level']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Nihongo Level']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
             (await buFilterLabel.getText()).trim(),"Nihongo Level");
         console.log(" Nihongo Level filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Current Assignment']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Current Assignment']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Current Assignment");
+            (await FilterLabel.getText()).trim(),"Current Assignment");
         console.log(" Current Assignment filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Core Skills']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Core Skills']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Core Skills");
+            (await FilterLabel.getText()).trim(),"Core Skills");
         console.log(" Core Skills filter label is correct");        
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Position']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Position']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Position");
+            (await FilterLabel.getText()).trim(),"Position");
         console.log(" Position filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='ACTION Batch']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='ACTION Batch']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"ACTION Batch");
+            (await FilterLabel.getText()).trim(),"ACTION Batch");
         console.log(" ACTION Batch filter label is correct");
 
-        buFilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Show/Hide Cloumns']"));
-        assert.strictEqual(await buFilterLabel.isDisplayed(), true);
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Show/Hide Cloumns']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
-            (await buFilterLabel.getText()).trim(),"Show/Hide Cloumns");
+            (await FilterLabel.getText()).trim(),"Show/Hide Cloumns");
         console.log(" Show/Hide Cloumns filter label is correct");
 
         const clearFilterBtn = await driver.findElement(RPM_ResAlloc.clearFilterBtn);
@@ -257,33 +258,37 @@ async function IT_005() {
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
         await driver.sleep(1000);
 
-        const buFilter = await driver.findElement(RPM_ResAlloc.buUnitsDropDown);
+        const buFilter = await driver.findElement(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
         await buFilter.click();
-        const clearFilter = await driver.findElement(RPM_ResAlloc.clearFilter);
+        const clearFilter = await driver.findElement(RPM_ResAlloc.BTN.BUclearFilter);
         await clearFilter.click();
         const selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.buOpt}']]`));
         await selectOption.click();
 
-        const allocType = await driver.findElement(RPM_ResAlloc.allocTypeDropDown);
+        const allocType = await driver.findElement(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
         await allocType.click();
+        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.ATclearFilter);
         await clearFilter.click();
         selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.allocType}']]`));
         await selectOption.click();
 
         const nihongoLvl = await driver.findElement(RPM_ResAlloc.nihongoLvlDropDown);
         await nihongoLvl.click();
+        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.NLclearFilter);
         await clearFilter.click();
         selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.nihongoLvl}']]`));
         await selectOption.click();
 
-        const currAssignment = await driver.findElement(RPM_ResAlloc.currAssgnDropDown);
+        const currAssignment = await driver.findElement(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
         await currAssignment.click();
+        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.CAclearFilter);
         await clearFilter.click();
         selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
         await selectOption.click();
 
-        const coreSkill = await driver.findElement(RPM_ResAlloc.coreSkillDropDown);
+        const coreSkill = await driver.findElement(RPM_ResAlloc.DRPDWN.coreSkillDropDown);
         await coreSkill.click();
+        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.CSclearFilter);
         await clearFilter.click();
         selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
         await selectOption.click();
@@ -306,4 +311,613 @@ async function IT_005() {
         }
     }
 }
-module.exports = { IT_001, IT_002,IT_004,IT_005 };
+
+async function IT_006() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedRowCount = data.dropdown.rowCount;
+
+        const rowCount = await driver.findElements(RPM_ResAlloc.DRPDWN.rowCount);
+
+        const actualRowCount = [];
+        for (const option of rowCount) {
+            actualRowCount.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualSdGrpOptions, expectedRowCount);
+        console.log('Dropdown options match expected values!');
+
+        await clickUntil(RPM_ResAlloc.BTN.pageFwd);
+        await driver.sleep(500);
+        await clickUntil(RPM_ResAlloc.BTN.pageBck);
+        await driver.sleep(500);
+
+        const screenshotPath = await takeScreenshot(driver, 'test_006');
+        await writeResult('RPM:ResAlloc_test_IT_006', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_006');
+            await writeResult('RPM:ResAlloc_test_IT_006', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_007() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedShowHide = data.dropdown.showHide_RPMResourceAlloc;
+
+        const showHide = await driver.findElements(RPM_ResAlloc.DRPDWN.showHide);
+
+        const actualShowHide = [];
+        for (const option of showHide) {
+            actualShowHide.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualShowHide, expectedShowHide);
+        console.log('Dropdown options match expected values!');
+
+        await showHide.click();
+        const clr = await driver.findElement(RPM_ResAlloc.BTN.SHclearFilter);
+        await clr.click();
+
+        for (let i = 1; i <= 22; i++) {
+        const path = `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[8]/div/div/div[2]/div[${i}]/input`;
+
+        const selectSH = await driver.findElement(By.xpath(path));
+        await selectSH.click();
+        await driver.sleep(500);
+}
+
+        const screenshotPath = await takeScreenshot(driver, 'test_007');
+        await writeResult('RPM:ResAlloc_test_IT_007', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_007');
+            await writeResult('RPM:ResAlloc_test_IT_007', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_008() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        for (let i = 1; i <= 22; i++) {
+        const sort = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]/div[1]/div/div[2]/button`;
+        const selectSort = await driver.findElement(By.xpath(sort));
+        await selectSort.click();
+        await driver.sleep(500);
+        }
+
+        const screenshotPath = await takeScreenshot(driver, 'test_008');
+        await writeResult('RPM:ResAlloc_test_IT_008', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_008');
+            await writeResult('RPM:ResAlloc_test_IT_008', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_009() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const columnResizeHandle = await driver.findElement(
+            By.xpath('/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[4]')
+        );
+
+        await driver.actions({ bridge: true })
+            .dragAndDrop(columnResizeHandle, { x: 100, y: 0 })
+            .perform();
+
+        const screenshotPath = await takeScreenshot(driver, 'test_009');
+        await writeResult('RPM:ResAlloc_test_IT_009', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_009');
+            await writeResult('RPM:ResAlloc_test_IT_009', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_010() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const sizes = [
+        { width: 1920, height: 1080 },
+        { width: 1366, height: 768 },
+        { width: 768, height: 1024 }
+        ];
+
+        for (const size of sizes) {
+        await driver.manage().window().setRect(size);
+        await driver.sleep(1000);
+        }
+
+        // Finally, maximize the window again
+        await driver.manage().window().maximize();
+
+        const screenshotPath = await takeScreenshot(driver, 'test_010');
+        await writeResult('RPM:ResAlloc_test_IT_010', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_010');
+            await writeResult('RPM:ResAlloc_test_IT_010', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_011() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const sizes = [
+        { width: 1920, height: 1080 },
+        { width: 1366, height: 768 },
+        { width: 768, height: 1024 }
+        ];
+
+        for (const size of sizes) {
+        await driver.manage().window().setRect(size);
+        await driver.sleep(1000);
+        }
+
+        // Finally, maximize the window again
+        await driver.manage().window().maximize();
+
+        const screenshotPath = await takeScreenshot(driver, 'test_011');
+        await writeResult('RPM:ResAlloc_test_IT_011', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_011');
+            await writeResult('RPM:ResAlloc_test_IT_011', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_013() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedBUOptions = data.dropdown.buOptions;
+        const BUOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
+
+        const actualBUOptions = [];
+        for (const option of BUOptions) {
+            actualBUOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualBUOptions, expectedBUOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_013');
+        await writeResult('RPM:ResAlloc_test_IT_013', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_013');
+            await writeResult('RPM:ResAlloc_test_IT_013', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_014() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedATOptions = data.dropdown.allocationoptions;
+        const ATOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
+
+        const actualATOptions = [];
+        for (const option of ATOptions) {
+            actualATOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualATOptions, expectedATOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_014');
+        await writeResult('RPM:ResAlloc_test_IT_014', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_014');
+            await writeResult('RPM:ResAlloc_test_IT_014', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_015() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedNLOptions = data.dropdown.nihongo;
+        const NLOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.nihongoLevelDropDown);
+
+        const actualNLOptions = [];
+        for (const option of NLOptions) {
+            actualNLOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualNLOptions, expectedNLOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_015');
+        await writeResult('RPM:ResAlloc_test_IT_015', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_015');
+            await writeResult('RPM:ResAlloc_test_IT_015', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_016() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedCAOptions = data.dropdown.currentAssignment;
+        const CAOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
+
+        const actualCAOptions = [];
+        for (const option of CAOptions) {
+            actualCAOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualCAOptions, expectedCAOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_016');
+        await writeResult('RPM:ResAlloc_test_IT_016', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_016');
+            await writeResult('RPM:ResAlloc_test_IT_016', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_017() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedCAOptions = data.dropdown.currentAssignment;
+        const CSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.coreSkillsDropDown);
+
+        const actualCSOptions = [];
+        for (const option of CSOptions) {
+            actualCSOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualCSOptions, expectedCSOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_017');
+        await writeResult('RPM:ResAlloc_test_IT_017', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_017');
+            await writeResult('RPM:ResAlloc_test_IT_017', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_018() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedPOSOptions = data.dropdown.position;
+        const POSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.positionDropDown);
+
+        const actualPOSOptions = [];
+        for (const option of POSOptions) {
+            actualPOSOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualPOSOptions, expectedPOSOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_018');
+        await writeResult('RPM:ResAlloc_test_IT_018', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_018');
+            await writeResult('RPM:ResAlloc_test_IT_018', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+async function IT_019() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.resourceAlloc);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management/Resource Allocation
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const expectedABOptions = data.dropdown.ACTION;
+        const ABOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.actionBatchDropDown);
+
+        const actualABOptions = [];
+        for (const option of ABOptions) {
+            actualABOptions.push((await option.getText()).trim());
+        }
+
+        assert.deepStrictEqual(actualABOptions, expectedABOptions);
+        console.log('Dropdown options match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_019');
+        await writeResult('RPM:ResAlloc_test_IT_019', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_019');
+            await writeResult('RPM:ResAlloc_test_IT_019', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+module.exports = { 
+     IT_001,
+     IT_002,
+     IT_004,
+     IT_005,
+     IT_006,
+     IT_007,
+     IT_008,
+     IT_009,
+     IT_010,
+     IT_011,
+     IT_013,
+     IT_014,
+     IT_015,
+     IT_016,
+     IT_017,
+     IT_018,
+     IT_019,
+    };
