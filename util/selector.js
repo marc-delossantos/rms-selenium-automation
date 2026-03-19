@@ -14,6 +14,24 @@ const loginSelectors = {
 };
 const RPM_ResAlloc = {
     SUBMENU:{
+        AHistory:{
+            BTN:{
+                PASampleSaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[1]/td[1]/span[2]`),
+                IASampleSaveBTN:'',
+                PAAssign: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/button`),
+                PADeleteData: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[1]/span`),
+                PADeleteData2: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[3]/td[1]/span`)
+            },
+            DRPDWN:{
+                projectAssign: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
+                PASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.25
+                internalActivity: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
+                IASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`) // select 0.50
+            },
+            TXTBX:{
+                PAsearch: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/input`)
+            }
+        }
 
     },
     BTN:{
