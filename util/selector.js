@@ -26,12 +26,47 @@ const RPM_ResAlloc = {
                 projectAssign: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
                 PASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.25
                 internalActivity: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
-                IASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`) // select 0.50
+                IASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.50
+                selectRole: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[4]/select`),
+                selectType: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[3]/select`),
             },
             TXTBX:{
                 PAsearch: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/input`)
+            },
+            TAB:{
+                longLeave: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/ul/li[1]/button`),
+                lastEmpDate: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/ul/li[2]/button`),
+            },
+        },
+        ESettings:{
+            TAB1:{
+                TXTBX:{
+                    date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[2]/div[2]/div[2]/div/div/div/div/input`),
+                    remarks: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[2]/div[3]/div[2]/div/textarea[1]`),
+                },
+                DRPDWN:{
+                    leaveType: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[2]/div[1]/div[2]/div/div`),
+                        selectIndef: By.xpath(`/html/body/div[2]/div[3]/ul/li[2]`),
+                    rowCount: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[2]/div`),
+                },
+                BTN:{
+                    adLeaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[3]/button`),
+                    pageFrw: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[3]/button[1]`),
+                    pageBck: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[3]/button[2]`),
+                },
+            },
+            TAB2:{
+                TXTBX:{
+
+                },
+                DRPDWN:{
+                    
+                },
+                BTN:{
+
+                },
             }
-        }
+        },
 
     },
     BTN:{

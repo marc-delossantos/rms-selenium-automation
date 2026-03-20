@@ -16,6 +16,11 @@ const inputData = {
     remarks: "testing only update"
   },
 
+  employeeSetting:{
+    date: '2026/03/20 - 2026/04/18',
+    remarks: 'Sample Only',
+  },
+
   searchData: {
     searchKeyword1: "Sample1"
   },
