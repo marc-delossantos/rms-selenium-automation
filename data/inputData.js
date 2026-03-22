@@ -19,6 +19,9 @@ const inputData = {
   employeeSetting:{
     date: '2026/03/20 - 2026/04/18',
     remarks: 'Sample Only',
+    remarks2: 'Update Remarks',
+    lastDate:'2026/03/20',
+    lastDate2:'2026/03/30',
   },
 
   searchData: {

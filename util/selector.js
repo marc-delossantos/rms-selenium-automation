@@ -33,12 +33,13 @@ const RPM_ResAlloc = {
             TXTBX:{
                 PAsearch: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/div/input`)
             },
+            
+        },
+        ESettings:{
             TAB:{
                 longLeave: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/ul/li[1]/button`),
                 lastEmpDate: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/ul/li[2]/button`),
             },
-        },
-        ESettings:{
             TAB1:{
                 TXTBX:{
                     date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[2]/div[2]/div[2]/div/div/div/div/input`),
@@ -47,23 +48,30 @@ const RPM_ResAlloc = {
                 DRPDWN:{
                     leaveType: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[2]/div[1]/div[2]/div/div`),
                         selectIndef: By.xpath(`/html/body/div[2]/div[3]/ul/li[2]`),
+                        selectPat: By.xpath(`/html/body/div[2]/div[3]/ul/li[1]`),
                     rowCount: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[2]/div`),
                 },
                 BTN:{
                     adLeaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[3]/button`),
+                    updtLeaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[3]/button[2]`),
                     pageFrw: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[3]/button[1]`),
                     pageBck: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[2]/div[2]/div/div[3]/button[2]`),
+                    delLeave: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[1]/div[2]/div[2]/div/div/div[2]/div/button[2]`),
+                    editLeave: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[1]/div/div[4]/div/div[1]/div[2]/div[2]/div/div/div[2]/div/button[1]`),
                 },
             },
             TAB2:{
                 TXTBX:{
-
+                    date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[2]/div[1]/div[2]/div/input`),
+                    remarks: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[2]/div[2]/div[2]/div/input`),
                 },
                 DRPDWN:{
-                    
+                    rowCount: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[4]/div/div[2]/div[2]/div/div[2]/div`),
                 },
                 BTN:{
-
+                    addBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[3]/button`),
+                    updtBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[4]/div/div[1]/div[2]/div[2]/div/div/div[2]/div/button[1]`),
+                    delBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div[2]/div/div[4]/div/div[1]/div[2]/div[2]/div/div/div[2]/div/button[2]`),
                 },
             }
         },
