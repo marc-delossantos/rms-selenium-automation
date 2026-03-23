@@ -1,7 +1,4 @@
-// const { loginTest } = require('./tests/loginTest');
-// const { dataCreationIA } = require('./tests/createNewIA');
-// const { updateDataIA } = require('./tests/updateIA');
-// const { filterData } = require('./tests/IAFilteringData');
+
 const {
      IT_001,
      IT_002,
@@ -43,21 +40,6 @@ const {
      IT_066,
      IT_068} = require('./tests/RPM_ResAlloc');
 
-//(async (times=10) => {
-    // for (let i = 0; i < times; i++) {
-    //     console.log(`\n=== Running login test iteration ${i + 1} ===`);
-    // await loginTest();
-    // console.log('----you may check report logs @excelLog folder-----'); 
-    // }
-        
-    // await dataCreationIA();
-    // console.log('----you may check report logs @excelLog folder-----');
-
-    // await updateDataIA();
-    // console.log('----you may check report logs @excelLog folder-----');
-
-    // await filterData();
-    // console.log('----you may check report logs @excelLog folder-----');
 (async () => {
     await IT_001();
     await IT_002();
