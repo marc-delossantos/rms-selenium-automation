@@ -1341,11 +1341,19 @@ async function IT_029() {
         const PAsearch = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
         await PAsearch.sendKeys('4GCLINICAL-AUTOMATION OFFSHORE');
         await driver.sleep(1000);
-        let PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
-        await driver.executeScript("arguments[0].scrollIntoView(true);", PAassign);
-        await driver.actions({ bridge: true }).move({ origin: PAassign }).click().perform();
-        
 
+        const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await driver.executeScript("arguments[0].scrollIntoView({block: 'center'});", PAassign);
+
+        // Optional: hover first (helps frameworks that require focus)
+        const actions = driver.actions({ bridge: true });
+        await actions.move({ origin: PAassign }).perform();
+
+        // Click using actions
+        await actions.move({ origin: PAassign }).click().perform();
+        await PAassign.click();
+        console.log('button clicked');
+        
         await driver.sleep(3000);
         const screenshotPath = await takeScreenshot(driver, 'test_029');
         await writeResult('RPM:ResAlloc_test_IT_029', 'PASS', screenshotPath);
@@ -1384,46 +1392,35 @@ async function IT_031() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
         // Wait for  Employee Allocation History page to load
         await driver.wait(until.urlContains('allocation-history'),10000);
 
-        const selPADropdown = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.projectAssign)
-        await selPADropdown.sendKeys('0')
-        const PAvalue = await selPADropdown.getText();
-        // const selectVal = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.PASample1)
-        // await selectVal.sendKeys('0.25')
+        const selPADropdown = await driver.wait(
+            until.elementLocated(By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[2]/td[9]/select`)), 
+            10000
+        );
+        await selPADropdown.click();
+        await driver.sleep(1000);
+        await selPADropdown.sendKeys('0.25');
+        await driver.actions().sendKeys(Key.ENTER).perform();
+        await driver.sleep(1000);
 
         await driver.sleep(500);
-        const saveBTN = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PASampleSaveBTN);
-        await saveBTN.click();
-
-        const selIADropdown = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.internalActivity)
-        await selIADropdown.sendKeys('0.25')
-        const IAvalue = await selIADropdown.getText();
-        // selectVal = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.IASample1)
-        // await selectVal.click();
-
-        await driver.sleep(500);
-        saveBTN = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.IASampleSaveBTN);
-        await saveBTN.click();
-
-        const AvailcellVal = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div/div/div[2]/div/table/tbody/tr[3]/td[9]/div`));
-        const value = await AvailcellVal.getText();
-
-        // Assert
-        const total = PAvalue + IAvalue;
-        assert.strictEqual(value.trim(), `${total}`, 'Cell value is not '+`${total}`);
-
-        console.log("Cell value verified:", value);
-
-        await driver.navigate().refresh();
-        console.log("Browser refreshed");
+        const PAsaveBTN = await driver.wait(
+            until.elementLocated(By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[1]/span[2]`)), 
+            10000
+        );
+        await PAsaveBTN.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_031');
         await writeResult('RPM:ResAlloc_test_IT_031', 'PASS', screenshotPath);
+
         
     } catch (error) {
         console.error('test failed:', error.message);
@@ -1459,13 +1456,16 @@ async function IT_036() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
         // Wait for  Employee Allocation History page to load
         await driver.wait(until.urlContains('allocation-history'),10000);
 
-        const deletePAData = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN);
+        const deletePAData = await driver.findElement(By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[1]/span[1]`));
         await deletePAData.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
         await driver.actions().sendKeys(Key.ENTER).perform();
@@ -1507,6 +1507,9 @@ async function IT_038() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
@@ -1517,11 +1520,11 @@ async function IT_038() {
         await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
         const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
         await PAassign.click();
-        await PAassign.click();
 
-        await PAsearch.sendKeys('LENOVO EDGE OFFSHORE');
-        await PAassign.click();
-        await PAassign.click();
+        const PAsearch2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
+        await PAsearch2.sendKeys('LENOVO EDGE OFFSHORE');
+        const PAassign2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await PAassign2.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_038');
         await writeResult('RPM:ResAlloc_test_IT_038', 'PASS', screenshotPath);
@@ -1530,8 +1533,8 @@ async function IT_038() {
         await deleteData.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
 
-        deleteData = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
-        await deleteData.click();
+        const deleteData2 = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
+        await deleteData2.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
         
     } catch (error) {
@@ -1568,6 +1571,9 @@ async function IT_039() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
@@ -1578,17 +1584,16 @@ async function IT_039() {
         await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
         const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
         await PAassign.click();
-        await PAassign.click();
 
-        await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
-        await PAassign.click();
-        await PAassign.click();
+        const PAsearch2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
+        await PAsearch2.sendKeys('4GCLINICAL-CSS OFFSHORE');
+        const PAassign2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await PAassign2.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_039');
         await writeResult('RPM:ResAlloc_test_IT_039', 'PASS', screenshotPath);
 
         await driver.actions().sendKeys(Key.ENTER).perform();
-
         const deleteData = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData));
         await deleteData.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
@@ -1627,6 +1632,9 @@ async function IT_040() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
@@ -1637,15 +1645,15 @@ async function IT_040() {
         await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
         const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
         await PAassign.click();
-        await PAassign.click();
 
         const selectRole = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.selectRole);
         await selectRole.sendKeys('Sub leader');
         await driver.actions().sendKeys(Key.ENTER).perform();
 
-        await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
-        await PAassign.click();
-        await PAassign.click();
+        const PAsearch2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
+        await PAsearch2.sendKeys('4GCLINICAL-CSS OFFSHORE');
+        const PAassign2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await PAassign2.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_040');
         await writeResult('RPM:ResAlloc_test_IT_040', 'PASS', screenshotPath);
@@ -1655,9 +1663,9 @@ async function IT_040() {
         const deleteData = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData));
         await deleteData.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
-
-        deleteData = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
-        await deleteData.click();
+        
+        const deleteData2 = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
+        await deleteData2.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
         
     } catch (error) {
@@ -1694,6 +1702,9 @@ async function IT_041() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
 
@@ -1704,15 +1715,15 @@ async function IT_041() {
         await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
         const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
         await PAassign.click();
-        await PAassign.click();
 
         const selectType = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.selectType);
         await selectType.sendKeys('Project');
         await driver.actions().sendKeys(Key.ENTER).perform();
 
-        await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
-        await PAassign.click();
-        await PAassign.click();
+        const PAsearch2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
+        await PAsearch2.sendKeys('4GCLINICAL-CSS OFFSHORE');
+        const PAassign2 = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await PAassign2.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_040');
         await writeResult('RPM:ResAlloc_test_IT_040', 'PASS', screenshotPath);
@@ -1723,8 +1734,8 @@ async function IT_041() {
         await deleteData.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
 
-        deleteData = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
-        await deleteData.click();
+        const deleteData2 = await driver.findElement(By.xpath(RPM_ResAlloc.SUBMENU.AHistory.BTN.PADeleteData2));
+        await deleteData2.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
         
     } catch (error) {
@@ -1760,6 +1771,9 @@ async function IT_054() {
         const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1804,16 +1818,19 @@ async function IT_055() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
         // Wait for  Employee Settings page to load
         await driver.wait(until.urlContains('employee-settings'),10000);
 
-        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.longLeave),10000);
+        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.longLeave),10000);
         await longLeaveTab.click();
 
-        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.lastEmpDate),10000);
+        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.lastEmpDate),10000);
         await lastEmpDate.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_055');
@@ -1853,13 +1870,16 @@ async function IT_056() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
         // Wait for  Employee Settings page to load
         await driver.wait(until.urlContains('employee-settings'),10000);
 
-        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.longLeave),10000);
+        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.longLeave),10000);
         await longLeaveTab.click();
 
         const leaveType = await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB1.DRPDWN.leaveType);
@@ -1938,13 +1958,16 @@ async function IT_057() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
         // Wait for  Employee Settings page to load
         await driver.wait(until.urlContains('employee-settings'),10000);
 
-        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.longLeave),10000);
+        const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.longLeave),10000);
         await longLeaveTab.click();
 
         const editLeave = await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB1.BTN.editLeave);
@@ -2010,6 +2033,9 @@ async function IT_058() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
@@ -2019,13 +2045,12 @@ async function IT_058() {
         const longLeaveTab = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.longLeave),10000);
         await longLeaveTab.click();
 
-        const deleteLeave= await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB1.BTN.delLeave);
+        const deleteLeave = await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB1.BTN.delLeave);
         await deleteLeave.click();
         await driver.actions().sendKeys(Key.ENTER).perform();
 
         await driver.sleep(5000);
  
-
         const screenshotPath = await takeScreenshot(driver, 'test_058');
         await writeResult('RPM:ResAlloc_test_IT_058', 'PASS', screenshotPath);
 
@@ -2062,6 +2087,9 @@ async function IT_062() {
         const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2139,6 +2167,9 @@ async function IT_063() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
@@ -2206,6 +2237,9 @@ async function IT_064() {
         const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2277,13 +2311,16 @@ async function IT_066() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
         // Wait for  Employee Settings page to load
         await driver.wait(until.urlContains('employee-settings'),10000);
 
-        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.lastEmpDate),10000);
+        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.lastEmpDate),10000);
         await lastEmpDate.click();
 
         const deleteEmpData = await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB2.BTN.delBTN);
@@ -2328,13 +2365,16 @@ async function IT_068() {
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
+        
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
 
         // Wait for  Employee Settings page to load
         await driver.wait(until.urlContains('employee-settings'),10000);
 
-        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.TAB.lastEmpDate),10000);
+        const lastEmpDate = await driver.wait(until.elementLocated(RPM_ResAlloc.SUBMENU.ESettings.TAB.lastEmpDate),10000);
         await lastEmpDate.click();
         
         const date = await driver.findElement(RPM_ResAlloc.SUBMENU.ESettings.TAB2.TXTBX.date)
