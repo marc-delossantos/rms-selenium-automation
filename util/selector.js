@@ -3,7 +3,7 @@ const data = require('../data/inputData');
 
 const sideMenu = {
     internalActivity: By.xpath("//a[.//span[normalize-space()='Internal Activity']]"),
-    resourceAlloc: By.xpath(`//a[.//span[normalize-space()='Resource Allocation']]`),
+    resourceAlloc: By.xpath(`/html/body/div/div/div/div[1]/div/div/div[3]/ul/li[1]/a/span`),
     burgerIcon: By.xpath(`//button[contains(@class, 'Hamburger') and contains(@class, 'btn-outline-secondary')]`)
 };
 
@@ -17,16 +17,16 @@ const RPM_ResAlloc = {
         AHistory:{
             BTN:{
                 PASampleSaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[1]/td[1]/span[2]`),
-                IASampleSaveBTN:'',
-                PAAssign: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/button`),
+                IASampleSaveBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/table/tbody/tr[1]/td[1]/span[2]`),
+                PAAssign: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[1]/button`),
                 PADeleteData: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[1]/span`),
                 PADeleteData2: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[3]/td[1]/span`)
             },
             DRPDWN:{
-                projectAssign: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
-                PASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.25
-                internalActivity: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
-                IASample1: By.xpath(`///*[@id="root"]/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.50
+                projectAssign: By.xpath('//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select'),
+                PASample1: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.25
+                internalActivity: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[5]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`),
+                IASample1: By.xpath(`//*[@id="root"]/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/div/table/tbody/tr[1]/td[9]/select`), // select 0.50
                 selectRole: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[4]/select`),
                 selectType: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div/div[2]/table/tbody/tr[2]/td[3]/select`),
             },
@@ -87,11 +87,11 @@ const RPM_ResAlloc = {
         CSclearFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/div/div[1]/button`),
         POSclearFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/div/div[1]/button`),
         ABclearFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[1]/button`),
-        SHclearFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[1]/button`),
+        SHclearFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[8]/div/div/div[1]/button`),
         actionBtn:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/button`),
-        ATSSProfileOpt:By.xpath(`//*[@aria-label="ATSS Profile"]`),
-        allocationHistoryOpt:By.xpath(`//*[@aria-label="Allocation History"]`),
-        employeeSettingsOpt:By.xpath(`//*[@aria-label="Set Employee Settings"]`),
+        ATSSProfileOpt:By.xpath(`//html/body/div[2]/div[1]/button`),
+        allocationHistoryOpt:By.xpath(`//html/body/div[2]/div[2]/button`),
+        employeeSettingsOpt:By.xpath(`//html/body/div[2]/div[3]/button`),
         pageFwd:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[2]/div[2]/div/div[3]/button[2]`),
         pageBck:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[2]/div[2]/div/div[3]/button[1]`),
         sort:By.xpath(),
@@ -102,14 +102,23 @@ const RPM_ResAlloc = {
     },
     DRPDWN:{
         buUnitsDropDown:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[1]/div/button`),
+            buOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[2]`),
         allocTypeDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/button`),
+            ATOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div[2]`),
         nihongoLevelDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[3]/div/button`),
+            NLOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[3]/div/div/div[2]`),
         currentAssignmentDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[4]/div/button`),
+            CAOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[4]/div/div/div[2]`),
         coreSkillsDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/button`),
+            CSOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/div/div[2]`),
         positionDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/button`),
+            POSOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/div/div[2]`),
         actionBatchDropDown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/button`),
+            ABOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[2]`),
         showHide: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[8]/div/button`),
+            SHOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[8]/div/div/div[2]`),
         rowCount:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[2]/div[2]/div/div[2]/div`),
+            rowCountOptions:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div[2]`),
 
     },
     TBL:{

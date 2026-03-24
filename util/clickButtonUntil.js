@@ -1,17 +1,19 @@
+const { Builder, By, until } = require('selenium-webdriver');
 
-async function clickUntil(path){
-const button = await driver.findElement(path);
+async function clickUntil(driver,path){
 
-while (true) {
-    const isEnabled = await button.isEnabled();
+    const button = await driver.findElement(path);
 
-    if (!isEnabled) {
-        console.log('Button is now disabled');
-        break;
+    while (true) {
+        const isEnabled = await button.isEnabled();
+
+        if (!isEnabled) {
+            console.log('Button is now disabled');
+            break;
+        }
+
+        await button.click();
+        // wait for UI update (important)
     }
-
-    await button.click();
-     // wait for UI update (important)
-}
 }
 module.exports ={clickUntil};

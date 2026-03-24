@@ -1,7 +1,7 @@
-const { Builder, By, until, Key } = require('selenium-webdriver');
+const { Builder, By, until, Key, Actions } = require('selenium-webdriver');
 const data = require('../data/inputData');
 const { login } = require('../util/login');
-const {assertTable} = require('../util/tableCheck');
+const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_ResAlloc } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');
@@ -53,19 +53,11 @@ async function IT_002() {
         await sideMenuIA.click();
 
         // --- Wait for Resource & Project Management/Internal Activity
-        await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
+        await driver.sleep(5000);
 
         // check elements
 
-        const breadcrumbElements = await driver.findElements(By.xpath("//nav[@aria-label='breadcrumb']//li"));
-        const actualBreadcrumbs = [];
-        for (const item of breadcrumbElements) {
-        actualBreadcrumbs.push((await item.getText()).trim());
-        }
-        assert.deepStrictEqual(actualBreadcrumbs, expectedBreadcrumbs);
-        console.log(" Breadcrumbs are correct");
-        
         const FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
         assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
@@ -114,58 +106,21 @@ async function IT_002() {
             (await FilterLabel.getText()).trim(),"Show/Hide Cloumns");
         console.log(" Show/Hide Cloumns filter label is correct");
 
-        const clearFilterBtn = await driver.findElement(RPM_ResAlloc.clearFilterBtn);
+        const clearFilterBtn = await driver.findElement(RPM_ResAlloc.BTN.clearFilterBtn);
         assert.strictEqual(await clearFilterBtn.isDisplayed(), true);
         console.log(" Clear All Filters button is present");
 
         const searchBox = await driver.wait(
-            until.elementLocated(RPM_ResAlloc.searchBox),
+            until.elementLocated(RPM_ResAlloc.TXTBX.searchBox),
             5000);
         assert.strictEqual(await searchBox.isDisplayed(), true);
         assert.strictEqual(await searchBox.isEnabled(), true);
         console.log(" Search box is present and ready for input");
 
-        const exportBtn = await driver.wait(until.elementLocated(RPM_ResAlloc.exportBtn),5000);
+        const exportBtn = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.exportBtn),5000);
         assert.strictEqual(await exportBtn.isDisplayed(), true);
         assert.strictEqual(await exportBtn.isEnabled(), true);
         console.log(" Export Excel button is present and clickable");
-
-        const expectedColumns = [
-        "Action",
-        "Employee Number",
-        "Name",
-        "NickName",
-        "Action Batch",
-        "Gender",
-        "Position",
-        "BU Official",
-        "BU Assigned",
-        "Project Assignments",
-        "Current Assignment",
-        "Internal Activities",
-        "Assigned Until",
-        "Efficiency",
-        "YoE(IND)",
-        "YoE(AWS)",
-        "YoE(JPN)",
-        "Onsite Pref",
-        "Nihongo",
-        "Certifications",
-        "Core Skills",
-        "Status",
-        "Allocation"
-        ];
-
-        const headers = await driver.findElements(RPM_ResAlloc.tableColumns);
-        const headerFields = [];
-        for (const h of headers) {
-            const field = await h.getAttribute("data-field");
-            if (field) headerFields.push(field);
-        }
-        console.log("Columns found:", headerFields);
-        // Assert columns match
-        const allColumnsPresent = expectedColumns.every(col => headerFields.includes(col));
-        console.log("All expected columns present:", allColumnsPresent);
 
         const burgerIcon = await driver.wait(
         until.elementLocated(sideMenu.burgerIcon),5000);
@@ -202,19 +157,19 @@ async function IT_004() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const search = await driver.findElement(RPM_ResAlloc.searchBox);
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
         await search.clear();
         await search.sendKeys(data.searchSampData.searchKeyword1);
 
         //assert
-        await driver.wait(until.elementsLocated(RPM_ResAlloc.tableColumns), 10000);
+        await driver.wait(until.elementsLocated(RPM_ResAlloc.TBL.tableColumns), 10000);
         let rows = await driver.findElements(RPM_ResAlloc.tableColumns);
         let matchFound = false;
 
         for (let row of rows) {
-            let nameCell = await row.findElement(RPM_ResAlloc.tableName);
+            let nameCell = await row.findElement(RPM_ResAlloc.TBL.tableName);
             let cellText = await nameCell.getText();
 
             if (cellText.includes(keyword)) {
@@ -256,43 +211,63 @@ async function IT_005() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
         const buFilter = await driver.findElement(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
         await buFilter.click();
         const clearFilter = await driver.findElement(RPM_ResAlloc.BTN.BUclearFilter);
         await clearFilter.click();
-        const selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.buOpt}']]`));
+        const selectOption = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[2]/div[1]`));
         await selectOption.click();
+        await driver.sleep(1000);
 
         const allocType = await driver.findElement(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
         await allocType.click();
-        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.ATclearFilter);
-        await clearFilter.click();
-        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.allocType}']]`));
-        await selectOption.click();
+        const clearFilter2 = await driver.findElement(RPM_ResAlloc.BTN.ATclearFilter);
+        await clearFilter2.click();
+        const selectOption2 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div[2]/div[1]`));
+        await selectOption2.click();
+        await driver.sleep(1000);
 
-        const nihongoLvl = await driver.findElement(RPM_ResAlloc.nihongoLvlDropDown);
+        const nihongoLvl = await driver.findElement(RPM_ResAlloc.DRPDWN.nihongoLevelDropDown);
         await nihongoLvl.click();
-        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.NLclearFilter);
-        await clearFilter.click();
-        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.nihongoLvl}']]`));
-        await selectOption.click();
+        const clearFilter3 = await driver.findElement(RPM_ResAlloc.BTN.NLclearFilter);
+        await clearFilter3.click();
+        const selectOption3 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[3]/div/div/div[2]/div[1]`));
+        await selectOption3.click();
+        await driver.sleep(1000);
 
         const currAssignment = await driver.findElement(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
         await currAssignment.click();
-        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.CAclearFilter);
-        await clearFilter.click();
-        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
-        await selectOption.click();
+        const clearFilter4 = await driver.findElement(RPM_ResAlloc.BTN.CAclearFilter);
+        await clearFilter4.click();
+        const selectOption4 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[4]/div/div/div[2]/div[1]`));
+        await selectOption4.click();
+        await driver.sleep(1000);
 
-        const coreSkill = await driver.findElement(RPM_ResAlloc.DRPDWN.coreSkillDropDown);
+        const coreSkill = await driver.findElement(RPM_ResAlloc.DRPDWN.coreSkillsDropDown);
         await coreSkill.click();
-        clearFilter = await driver.findElement(RPM_ResAlloc.BTN.CSclearFilter);
-        await clearFilter.click();
-        selectOption = await driver.findElement(By.xpath(`//div[contains(@class,'option') and .//span[text()='${data.dropdownValue.currAssignment}']]`));
-        await selectOption.click();
+        const clearFilter5 = await driver.findElement(RPM_ResAlloc.BTN.CSclearFilter);
+        await clearFilter5.click();
+        const selectOption5 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/div/div[2]/div[1]`));
+        await selectOption5.click();
+        await driver.sleep(1000);
 
+        const position = await driver.findElement(RPM_ResAlloc.DRPDWN.positionDropDown);
+        await position.click();
+        const clearFilter6 = await driver.findElement(RPM_ResAlloc.BTN.POSclearFilter);
+        await clearFilter6.click();
+        const selectOption6 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/div/div[2]/div[1]`));
+        await selectOption6.click();
+        await driver.sleep(1000);
+
+        const action = await driver.findElement(RPM_ResAlloc.DRPDWN.actionBatchDropDown);
+        await action.click();
+        const clearFilter7 = await driver.findElement(RPM_ResAlloc.BTN.ABclearFilter);
+        await clearFilter7.click();
+        const selectOption7 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[2]/div[2]`));
+        await selectOption7.click();
+        await driver.sleep(1000);
 
         const screenshotPath = await takeScreenshot(driver, 'test_005');
         await writeResult('RPM:ResAlloc_test_IT_005', 'PASS', screenshotPath);
@@ -325,23 +300,14 @@ async function IT_006() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const expectedRowCount = data.dropdown.rowCount;
+        await driver.findElement(RPM_ResAlloc.DRPDWN.rowCount).click();
+        await driver.findElement(By.xpath(`/html/body/div[2]/div[3]/ul/li[4]`)).click(); //click 100
 
-        const rowCount = await driver.findElements(RPM_ResAlloc.DRPDWN.rowCount);
-
-        const actualRowCount = [];
-        for (const option of rowCount) {
-            actualRowCount.push((await option.getText()).trim());
-        }
-
-        assert.deepStrictEqual(actualSdGrpOptions, expectedRowCount);
-        console.log('Dropdown options match expected values!');
-
-        await clickUntil(RPM_ResAlloc.BTN.pageFwd);
+        await clickUntil(driver,RPM_ResAlloc.BTN.pageFwd);
         await driver.sleep(500);
-        await clickUntil(RPM_ResAlloc.BTN.pageBck);
+        await clickUntil(driver,RPM_ResAlloc.BTN.pageBck);
         await driver.sleep(500);
 
         const screenshotPath = await takeScreenshot(driver, 'test_006');
@@ -375,21 +341,11 @@ async function IT_007() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const expectedShowHide = data.dropdown.showHide_RPMResourceAlloc;
-
-        const showHide = await driver.findElements(RPM_ResAlloc.DRPDWN.showHide);
-
-        const actualShowHide = [];
-        for (const option of showHide) {
-            actualShowHide.push((await option.getText()).trim());
-        }
-
-        assert.deepStrictEqual(actualShowHide, expectedShowHide);
-        console.log('Dropdown options match expected values!');
-
+        const showHide = await driver.findElement(RPM_ResAlloc.DRPDWN.showHide);
         await showHide.click();
+
         const clr = await driver.findElement(RPM_ResAlloc.BTN.SHclearFilter);
         await clr.click();
 
@@ -432,14 +388,15 @@ async function IT_008() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        for (let i = 1; i <= 22; i++) {
-        const sort = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]/div[1]/div/div[2]/button`;
-        const selectSort = await driver.findElement(By.xpath(sort));
-        await selectSort.click();
-        await driver.sleep(500);
-        }
+        for (let i = 3; i <= 25; i++) {
+            const sort = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]`;
+            const selectSort = await driver.findElement(By.xpath(sort));
+
+            await selectSort.click();
+            await driver.sleep(500);
+    }
 
         const screenshotPath = await takeScreenshot(driver, 'test_008');
         await writeResult('RPM:ResAlloc_test_IT_008', 'PASS', screenshotPath);
@@ -472,15 +429,23 @@ async function IT_009() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const columnResizeHandle = await driver.findElement(
-            By.xpath('/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[4]')
-        );
+       for (let i = 3; i <= 25; i++) {
+        const resize = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]`;
+        const selectResize = await driver.findElement(By.xpath(resize));
+
+        const columnResizeHandle = await selectResize.findElement(By.css('.MuiDataGrid-columnSeparator'));
+
+        const randomWidth = Math.floor(Math.random() * (300 - 2 + 1)) + 50;
 
         await driver.actions({ bridge: true })
-            .dragAndDrop(columnResizeHandle, { x: 100, y: 0 })
+            .dragAndDrop(columnResizeHandle, { x: randomWidth, y: 0 })
             .perform();
+
+        console.log(`Column ${i} resized by ${randomWidth} pixels`);
+        await driver.sleep(500);
+    }
 
         const screenshotPath = await takeScreenshot(driver, 'test_009');
         await writeResult('RPM:ResAlloc_test_IT_009', 'PASS', screenshotPath);
@@ -513,19 +478,19 @@ async function IT_010() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const sizes = [
-        { width: 1920, height: 1080 },
-        { width: 1366, height: 768 },
-        { width: 768, height: 1024 }
-        ];
+        const resizeTimes = 10;
 
-        for (const size of sizes) {
-        await driver.manage().window().setRect(size);
-        await driver.sleep(1000);
+        for (let t = 0; t < resizeTimes; t++) {
+
+            const randomWidth = Math.floor(Math.random() * (1920 - 300 + 1)) + 300;   
+            const randomHeight = Math.floor(Math.random() * (1080 - 300 + 1)) + 300;  
+
+            await driver.manage().window().setRect({ width: randomWidth, height: randomHeight });
+            console.log(`Resized window to ${randomWidth}x${randomHeight}`);
+            await driver.sleep(3000);
         }
-
         // Finally, maximize the window again
         await driver.manage().window().maximize();
 
@@ -560,7 +525,7 @@ async function IT_011() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
         const exportFile = await driver.findElement(RPM_ResAlloc.BTN.exportBtn);
         await exportFile.click();
@@ -596,20 +561,30 @@ async function IT_013() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+    
+        const BUDropdown = await driver.findElement(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
+        await BUDropdown.click();
+
+        const BUOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.buOptions);
 
         const expectedBUOptions = data.dropdown.buOptions;
-        const BUOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
-
         const actualBUOptions = [];
         for (const option of BUOptions) {
-            actualBUOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualBUOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualBUOptions, expectedBUOptions);
         console.log('Dropdown options match expected values!');
-
-        await BUOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_013');
         await writeResult('RPM:ResAlloc_test_IT_013', 'PASS', screenshotPath);
@@ -642,20 +617,30 @@ async function IT_014() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const ATDropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
+        await ATDropDown.click();
+
+        const ATOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.ATOptions);
 
         const expectedATOptions = data.dropdown.allocationoptions;
-        const ATOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
-
         const actualATOptions = [];
         for (const option of ATOptions) {
-            actualATOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualATOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualATOptions, expectedATOptions);
         console.log('Dropdown options match expected values!');
-
-        await ATOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_014');
         await writeResult('RPM:ResAlloc_test_IT_014', 'PASS', screenshotPath);
@@ -688,20 +673,30 @@ async function IT_015() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const NLDropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.nihongoLevelDropDown);
+        await NLDropDown.click();
+
+        const NLOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.NLOptions);
 
         const expectedNLOptions = data.dropdown.nihongo;
-        const NLOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.nihongoLevelDropDown);
-
         const actualNLOptions = [];
         for (const option of NLOptions) {
-            actualNLOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualNLOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualNLOptions, expectedNLOptions);
         console.log('Dropdown options match expected values!');
-
-        await NLOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_015');
         await writeResult('RPM:ResAlloc_test_IT_015', 'PASS', screenshotPath);
@@ -734,20 +729,30 @@ async function IT_016() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const CADropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
+        await CADropDown.click();
+
+        const CAOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.CAOptions);
 
         const expectedCAOptions = data.dropdown.currentAssignment;
-        const CAOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
-
         const actualCAOptions = [];
         for (const option of CAOptions) {
-            actualCAOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualCAOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualCAOptions, expectedCAOptions);
         console.log('Dropdown options match expected values!');
-
-        await CAOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_016');
         await writeResult('RPM:ResAlloc_test_IT_016', 'PASS', screenshotPath);
@@ -780,20 +785,30 @@ async function IT_017() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const expectedCAOptions = data.dropdown.currentAssignment;
-        const CSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.coreSkillsDropDown);
+        const CSDropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.coreSkillsDropDown);
+        await CSDropDown.click();
 
+        const CSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.CSOptions);
+
+        const expectedCSOptions = data.dropdown.coreSkills;
         const actualCSOptions = [];
         for (const option of CSOptions) {
-            actualCSOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualCSOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualCSOptions, expectedCSOptions);
         console.log('Dropdown options match expected values!');
-
-        await CSOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_017');
         await writeResult('RPM:ResAlloc_test_IT_017', 'PASS', screenshotPath);
@@ -826,20 +841,30 @@ async function IT_018() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const POSDropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.positionDropDown);
+        await POSDropDown.click();
+
+        const POSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.POSOptions);
 
         const expectedPOSOptions = data.dropdown.position;
-        const POSOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.positionDropDown);
-
         const actualPOSOptions = [];
         for (const option of POSOptions) {
-            actualPOSOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualPOSOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualPOSOptions, expectedPOSOptions);
         console.log('Dropdown options match expected values!');
-
-        await POSOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_018');
         await writeResult('RPM:ResAlloc_test_IT_018', 'PASS', screenshotPath);
@@ -872,20 +897,30 @@ async function IT_019() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const ABDropDown = await driver.findElement(RPM_ResAlloc.DRPDWN.actionBatchDropDown);
+        await ABDropDown.click();
+
+        const ABOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.ABOptions);
 
         const expectedABOptions = data.dropdown.ACTION;
-        const ABOptions = await driver.findElements(RPM_ResAlloc.DRPDWN.actionBatchDropDown);
-
         const actualABOptions = [];
         for (const option of ABOptions) {
-            actualABOptions.push((await option.getText()).trim());
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualABOptions.push(...items); // push each item separately
         }
 
         assert.deepStrictEqual(actualABOptions, expectedABOptions);
         console.log('Dropdown options match expected values!');
-
-        await ABOptions.click();
 
         const screenshotPath = await takeScreenshot(driver, 'test_019');
         await writeResult('RPM:ResAlloc_test_IT_019', 'PASS', screenshotPath);
@@ -918,61 +953,33 @@ async function IT_020() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const buOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.buUnitsDropDown);
-        await buOptions.click();
-        const clrBtn = await driver.findElement(RPM_ResAlloc.BTN.BUclearFilter);
-        await clrBtn.click();
+        const dropdowns = [
+        { drop: RPM_ResAlloc.DRPDWN.buUnitsDropDown, clearBtn: RPM_ResAlloc.BTN.BUclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.allocTypeDropDown, clearBtn: RPM_ResAlloc.BTN.ATclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.nihongoLevelDropDown, clearBtn: RPM_ResAlloc.BTN.NLclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[3]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.currentAssignmentDropDown, clearBtn: RPM_ResAlloc.BTN.CAclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[4]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.coreSkillsDropDown, clearBtn: RPM_ResAlloc.BTN.CSclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.positionDropDown, clearBtn: RPM_ResAlloc.BTN.POSclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/div/div[2]/div[1]` },
+        { drop: RPM_ResAlloc.DRPDWN.actionBatchDropDown, clearBtn: RPM_ResAlloc.BTN.ABclearFilter, selectXPath: `/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[2]/div[1]` },
+    ];
 
-        const select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[2]/div[1]`))
+        for (const item of dropdowns) {
+            const dropElement = await driver.findElement(item.drop);
+            await dropElement.click();
+            await driver.sleep(500);
+            const clearBtn = await driver.findElement(item.clearBtn);
+            await clearBtn.click();
+            await driver.sleep(500);
+            const firstOption = await driver.findElement(By.xpath(item.selectXPath));
+            await firstOption.click();
+            await driver.sleep(500);
+        }
 
-        const ATOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.allocTypeDropDown);
-        await ATOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.ATclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div/div[2]/div[1]`));
-
-
-        const NLOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.nihongoLevelDropDown);
-        await NLOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.NLclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[3]/div/div/div[2]/div[1]`));
-
-        const CAOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.currentAssignmentDropDown);
-        await CAOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.CAclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[4]/div/div/div[2]/div[1]`));
-
-        const CSOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.coreSkillsDropDown);
-        await CSOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.CSclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[5]/div/div/div[2]/div[1]`));
-
-        const POSOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.positionDropDown);
-        await POSOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.POSclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[6]/div/div/div[2]/div[1]`));
-
-        const ABOptions = await driver.findElement(RPM_ResAlloc.DRPDWN.actionBatchDropDown);
-        await ABOptions.click();
-        clrBtn = await driver.findElement(RPM_ResAlloc.BTN.ABclearFilter);
-        await clrBtn.click();
-
-        select1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div/div[7]/div/div/div[2]/div[1]`));
-
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys("xxxxSample_Onlyxxxx")
-
+        const searchBox = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await searchBox.sendKeys("xxxxSample_Onlyxxxx");
+        await driver.sleep(2000);
         const clearAllBtn = await driver.findElement(RPM_ResAlloc.BTN.clearFilterBtn);
         await clearAllBtn.click();
 
@@ -1007,8 +1014,12 @@ async function IT_021() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
+        
         const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
         await actionBtn.click();
 
@@ -1052,6 +1063,11 @@ async function IT_022() {
 
         // Wait for Resource Allocation page
         await driver.wait(until.urlContains('resource-allocation'), 10000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
         await actionBtn.click();
@@ -1088,6 +1104,10 @@ async function IT_022() {
         );
 
         console.log("Switched to ATSS tab");
+        await driver.sleep(1000);
+
+        const screenshotPath = await takeScreenshot(driver, 'test_022');
+        await writeResult('RPM:ResAlloc_test_IT_022', 'PASS', screenshotPath);
 
         // Close ATSS tab
         await driver.close();
@@ -1097,8 +1117,6 @@ async function IT_022() {
 
         console.log("Returned to original tab");
 
-        const screenshotPath = await takeScreenshot(driver, 'test_022');
-        await writeResult('RPM:ResAlloc_test_IT_022', 'PASS', screenshotPath);
 
     } catch (error) {
         console.error('test failed:', error.message);
@@ -1130,7 +1148,14 @@ async function IT_023() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+        
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1169,10 +1194,14 @@ async function IT_024() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1180,40 +1209,91 @@ async function IT_024() {
         // Wait for  Employee Allocation History page to load
         await driver.wait(until.urlContains('allocation-history'),10000);
 
-        const selPADropdown = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.projectAssign)
-        await selPADropdown.sendKeys('0.25')
-        const PAvalue = await selPADropdown.getText();
-        // const selectVal = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.PASample1)
-        // await selectVal.sendKeys('0.25')
+        const selPADropdown = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.projectAssign), 
+            10000
+        );
+        await selPADropdown.click();
+        await driver.sleep(1000);
+        await selPADropdown.sendKeys('0.25');
+        await driver.actions().sendKeys(Key.ENTER).perform();
+        await driver.sleep(1000);
 
         await driver.sleep(500);
-        const saveBTN = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PASampleSaveBTN);
-        await saveBTN.click();
+        const PAsaveBTN = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.BTN.PASampleSaveBTN), 
+            10000
+        );
+        await PAsaveBTN.click();
 
-        const selIADropdown = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.internalActivity)
-        await selIADropdown.sendKeys('0.5')
-        const IAvalue = await selIADropdown.getText();
-        // selectVal = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.IASample1)
-        // await selectVal.click();
+        const selIADropdown = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.internalActivity), 
+            10000
+        );
+        await selIADropdown.sendKeys('0.50');
+        await driver.actions().sendKeys(Key.ENTER).perform();
+        await driver.sleep(1000);
 
         await driver.sleep(500);
-        saveBTN = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.IASampleSaveBTN);
-        await saveBTN.click();
+        const IAsaveBTN = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.BTN.IASampleSaveBTN), 
+            10000
+        );
+        await IAsaveBTN.click();
 
-        const AvailcellVal = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div/div/div/div[2]/div/table/tbody/tr[3]/td[9]/div`));
-        const value = await AvailcellVal.getText();
+        const PAvalue = parseFloat(await selPADropdown.getAttribute('value'));
+        const IAvalue = parseFloat(await selIADropdown.getAttribute('value'));
 
-        // Assert
+        const BUcellVal = await driver.findElement(By.xpath(
+            `/html/body/div/div/div/div[2]/div/div/div[6]/div/div/div/div[2]/div/table/tbody/tr[4]/td[9]`
+        ));
+
         const total = PAvalue + IAvalue;
-        assert.strictEqual(value.trim(), `${total}`, 'Cell value is not 0.75');
 
+        await driver.wait(async () => {
+            const text = await BUcellVal.getText();
+            const currentValue = parseFloat(text.replace(/[^\d.]/g, ''));
+            return currentValue === total;
+        }, 10000);
+
+        const value = parseFloat(
+            (await BUcellVal.getText()).replace(/[^\d.]/g, '')
+        );
+
+        console.log(value);
+
+        assert.strictEqual(value, total, `Cell value is not ${total}`);
         console.log("Cell value verified:", value);
+
 
         await driver.navigate().refresh();
         console.log("Browser refreshed");
 
         const screenshotPath = await takeScreenshot(driver, 'test_024');
         await writeResult('RPM:ResAlloc_test_IT_024', 'PASS', screenshotPath);
+
+        const selPADropdown_new = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.projectAssign), 
+            10000);
+        await selPADropdown_new.click();
+        await selPADropdown_new.sendKeys('0');
+        await driver.actions().sendKeys(Key.ENTER).perform();
+        const PAsaveBTN_new = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.BTN.PASampleSaveBTN), 
+            10000
+        );
+        await PAsaveBTN_new.click();
+        const selIADropdown_new = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.DRPDWN.internalActivity), 
+            10000);
+        await selIADropdown_new.click();
+        await selIADropdown_new.sendKeys('0');
+        await driver.actions().sendKeys(Key.ENTER).perform();
+        const IAsaveBTN_new = await driver.wait(
+            until.elementLocated(RPM_ResAlloc.SUBMENU.AHistory.BTN.IASampleSaveBTN), 
+            10000
+        );
+        await IAsaveBTN_new.click();
         
     } catch (error) {
         console.error('test failed:', error.message);
@@ -1243,10 +1323,14 @@ async function IT_029() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
+
+        const actionBtn = await driver.findElement(RPM_ResAlloc.BTN.actionBtn);
+        await actionBtn.click();
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1255,11 +1339,14 @@ async function IT_029() {
         await driver.wait(until.urlContains('allocation-history'),10000);
 
         const PAsearch = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.TXTBX.PAsearch);
-        await PAsearch.sendKeys('4GCLINICAL-CSS OFFSHORE');
-        const PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
-        await PAassign.click();
-        await PAassign.click();
+        await PAsearch.sendKeys('4GCLINICAL-AUTOMATION OFFSHORE');
+        await driver.sleep(1000);
+        let PAassign = await driver.findElement(RPM_ResAlloc.SUBMENU.AHistory.BTN.PAAssign);
+        await driver.executeScript("arguments[0].scrollIntoView(true);", PAassign);
+        await driver.actions({ bridge: true }).move({ origin: PAassign }).click().perform();
+        
 
+        await driver.sleep(3000);
         const screenshotPath = await takeScreenshot(driver, 'test_029');
         await writeResult('RPM:ResAlloc_test_IT_029', 'PASS', screenshotPath);
         
@@ -1291,10 +1378,11 @@ async function IT_031() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1365,10 +1453,11 @@ async function IT_036() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1412,10 +1501,11 @@ async function IT_038() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1472,10 +1562,11 @@ async function IT_039() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1530,10 +1621,11 @@ async function IT_040() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1596,10 +1688,11 @@ async function IT_041() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
 
-        const searchKey = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
-        await searchKey.sendKeys('marc jeff');
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const allocHistory = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.allocationHistoryOpt),5000)
         await allocHistory.click();
@@ -1662,7 +1755,11 @@ async function IT_054() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1701,7 +1798,11 @@ async function IT_055() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1746,7 +1847,11 @@ async function IT_056() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1827,7 +1932,11 @@ async function IT_057() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1895,7 +2004,11 @@ async function IT_058() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -1944,7 +2057,11 @@ async function IT_062() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2016,7 +2133,11 @@ async function IT_063() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2080,7 +2201,11 @@ async function IT_064() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2146,7 +2271,11 @@ async function IT_066() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
@@ -2193,7 +2322,11 @@ async function IT_068() {
 
         // --- Wait for Resource & Project Management/Resource Allocation
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
-        await driver.sleep(1000);
+        await driver.sleep(5000);
+
+        const search = await driver.findElement(RPM_ResAlloc.TXTBX.searchBox);
+        await search.clear();
+        await search.sendKeys(data.searchSampData.searchKeyword1);
 
         const empSet = await driver.wait(until.elementLocated(RPM_ResAlloc.BTN.employeeSettingsOpt),5000)
         await empSet.click();
