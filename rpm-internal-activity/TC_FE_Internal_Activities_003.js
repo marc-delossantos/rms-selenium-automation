@@ -8,7 +8,7 @@ const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
 
-async function IT_002() {
+async function IT_003() {
       let driver;
     try {
         driver = await new Builder().forBrowser('chrome').build();
@@ -23,7 +23,7 @@ async function IT_002() {
         await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
         await driver.sleep(1000);
 
-        const FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='SD Group']"));
+        let FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='SD Group']"));
         assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
             (await FilterLabel.getText()).trim(),"SD Group");
@@ -47,12 +47,16 @@ async function IT_002() {
             (await FilterLabel.getText()).trim(),"Status");
         console.log(" Status filter label is correct");
 
-        const exportBtn = await driver.findElement(RPM_InterActiv.BTN.exportBTN);
+        const exportBtn = await driver.wait(until.elementLocated(RPM_InterActiv.BTN.exportBTN),10000);
+        await driver.wait(until.elementIsVisible(exportBtn), 5000);
+        await driver.wait(until.elementIsEnabled(exportBtn), 5000);
         assert.strictEqual(await exportBtn.isDisplayed(), true);
         assert.strictEqual(await exportBtn.isEnabled(), true);
         console.log(" Export Excel button is present");
 
-        const createNewBtn = await driver.findElement(RPM_InterActiv.BTN.exportBTN);
+        const createNewBtn = await driver.wait(until.elementLocated(RPM_InterActiv.BTN.exportBTN),10000);
+        await driver.wait(until.elementIsVisible(createNewBtn), 5000);
+        await driver.wait(until.elementIsEnabled(createNewBtn), 5000);
         assert.strictEqual(await createNewBtn.isDisplayed(), true);
         assert.strictEqual(await createNewBtn.isEnabled(), true);
         console.log(" Create New button is present");
@@ -64,7 +68,9 @@ async function IT_002() {
         assert.strictEqual(await searchBox.isEnabled(), true);
         console.log(" Search box is present and ready for input");
 
-        const clearFilterBtn = await driver.findElement(RPM_InterActiv.BTN.clearAllFilter);
+        const clearFilterBtn = await driver.wait(until.elementLocated(RPM_InterActiv.BTN.clearAllFilter),10000);
+        await driver.wait(until.elementIsVisible(clearFilterBtn), 5000);
+        await driver.wait(until.elementIsEnabled(clearFilterBtn), 5000);
         assert.strictEqual(await clearFilterBtn.isDisplayed(), true);
         assert.strictEqual(await clearFilterBtn.isEnabled(), true);
         console.log(" Clear All Filters button is present");
@@ -76,7 +82,7 @@ async function IT_002() {
 
         const IATableHeaders = await driver.findElements(RPM_InterActiv.TBL.header);
 
-        const expectedIATableHeaders = data.IAtable.header;
+        const expectedIATableHeaders = data.IAtable.Header;
         const actualIATableHeaders = [];
         for (const option of IATableHeaders) {
             await driver.executeScript("arguments[0].scrollIntoView(true);", option);
@@ -94,15 +100,15 @@ async function IT_002() {
         assert.deepStrictEqual(actualIATableHeaders, expectedIATableHeaders);
         console.log('Table Headers match expected values!');
 
-        const screenshotPath = await takeScreenshot(driver, 'test_002');
-        await writeResult('RPM:InterActiv_test_IT_002', 'PASS', screenshotPath);
+        const screenshotPath = await takeScreenshot(driver, 'test_003');
+        await writeResult('RPM:InterActiv_test_IT_003', 'PASS', screenshotPath);
         
     } catch (error) {
         console.error('test failed:', error.message);
         let screenshotPath;
         if (driver) {
-            screenshotPath = await takeScreenshot(driver, 'test_002');
-            await writeResult('RPM:InterActiv_test_IT_002', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+            screenshotPath = await takeScreenshot(driver, 'test_003');
+            await writeResult('RPM:InterActiv_test_IT_003', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
         }
     }finally {
         if (driver) {
@@ -113,5 +119,5 @@ async function IT_002() {
 }
 
 module.exports = { 
-     IT_002,
+     IT_003,
     };

@@ -28,12 +28,13 @@ const inputData = {
     searchKeyword1: "Sample1"
   },
   dropdown:{
-    sdOptions:['ヘンタイ',
+    sdOptions:['Corp Services',
               'SD1',
               'SD2',
-              'SD3TEST',
+              'SD3',
               'SD4',
-              'SD5'
+              'SD5',
+              'Tech Service',
     ],
     buOptions:['ACTION',
                'ACTIONCEB',
@@ -190,9 +191,10 @@ const inputData = {
 
   searchSampData:{
     searchKeyword1:'Marc Jeffson',
+    searchKeyword2: 'Sample Activity',
   },
   IAtable:{
-    Header:['Action','Activty Name','Category','Description','Total Allocation','Tech Stack','Start','End','SD','BU','Status',],
+    Header:['Action','Activity Name','Category','Description','Total Allocation','Tech Stack','Start','End','SD','BU','Status',],
   }
 
 
