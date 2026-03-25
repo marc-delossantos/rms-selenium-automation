@@ -3,12 +3,12 @@ const data = require('../data/inputData');
 const { login } = require('../util/login');
 const assert = require('assert');
 const { sideMenu } = require('../util/selector');
-const { scrollTopBot } = require('../util/scroll');
 const { RPM_InterActiv } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
+const { tableCheck } = require('../util/tablecCheck');
 
-async function IT_005() {
+async function IT_009() {
       let driver;
     try {
         driver = await new Builder().forBrowser('chrome').build();
@@ -25,39 +25,23 @@ async function IT_005() {
 
         const SDDropdown = await driver.findElement(RPM_InterActiv.DRPDWN.SDDropdown);
         await SDDropdown.click();
+        const SDClearBtn = await driver.findElement(RPM_InterActiv.BTN.SDclearDrp);
+        await SDClearBtn.click();
+        const selectSD1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div[2]/div[2]/span`))
+        await selectSD1.click();
         await driver.sleep(500);
-
-        const dropdownPanel = await driver.findElement(RPM_InterActiv.DRPDWN.SDOptions);
-        const SDOptions = await driver.findElements(RPM_InterActiv.DRPDWN.SDOptions);
-
-        await scrollTopBot(driver,dropdownPanel);
         
-        const expectedSDOptions = data.dropdown.sdOptions;
-        const actualSDOptions = [];
-        for (const option of SDOptions) {
+        await tableCheck(driver,RPM_InterActiv.TBL.table,'SD','SD1');
 
-            let text = (await option.getText()).trim();
-
-            if (text.endsWith('+')) {
-                text = text.slice(0, -1).trim();
-            }
-
-            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
-            actualSDOptions.push(...items); // push each item separately
-        }
-
-        assert.deepStrictEqual(actualSDOptions, expectedSDOptions);
-        console.log('Dropdown options match expected values!');
-
-        const screenshotPath = await takeScreenshot(driver, 'test_005');
-        await writeResult('RPM:InterActiv_test_IT_005', 'PASS', screenshotPath);
+        const screenshotPath = await takeScreenshot(driver, 'test_009');
+        await writeResult('RPM:InterActiv_test_IT_009', 'PASS', screenshotPath);
         
     } catch (error) {
         console.error('test failed:', error.message);
         let screenshotPath;
         if (driver) {
-            screenshotPath = await takeScreenshot(driver, 'test_005');
-            await writeResult('RPM:InterActiv_test_IT_005', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+            screenshotPath = await takeScreenshot(driver, 'test_009');
+            await writeResult('RPM:InterActiv_test_IT_009', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
         }
     }finally {
         if (driver) {
@@ -68,5 +52,5 @@ async function IT_005() {
 }
 
 module.exports = { 
-     IT_005,
+     IT_009,
     };

@@ -186,12 +186,13 @@ const RPM_InterActiv = {
         CATDropdown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[3]/div/button/div`),
             CATOptions: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[3]/div/div/div[2]`),
         STATDropdown: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[4]/div/button/div`),
-            CATOptions: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[4]/div/div/div[2]`),
+            STATOptions: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[4]/div/div/div[2]`),
     },
     TBL:{
         header: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div/div`),
-        tableColumns: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[2]`),
+        tableColumns: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]`),
         tableName: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[3]`),
+        table:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div`),
     },
 };
 

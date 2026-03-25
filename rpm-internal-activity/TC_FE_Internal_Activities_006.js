@@ -4,6 +4,7 @@ const { login } = require('../util/login');
 const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_InterActiv } = require('../util/selector');
+const { scrollTopBot } = require('../util/scroll');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -24,13 +25,16 @@ async function IT_006() {
 
         const BUDropdown = await driver.findElement(RPM_InterActiv.DRPDWN.BUDropdown);
         await BUDropdown.click();
+        await driver.sleep(500);
 
+        const dropdownPanel = await driver.findElement(RPM_InterActiv.DRPDWN.BUOptions);
         const BUOptions = await driver.findElements(RPM_InterActiv.DRPDWN.BUOptions);
 
-        const expectedBUOptions = data.dropdown.sdOptions;
+        await scrollTopBot(driver,dropdownPanel);
+        
+        const expectedBUOptions = data.dropdown.buOptions;
         const actualBUOptions = [];
         for (const option of BUOptions) {
-            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
 
             let text = (await option.getText()).trim();
 
@@ -40,9 +44,11 @@ async function IT_006() {
 
             const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
             actualBUOptions.push(...items); // push each item separately
+            
         }
+        
 
-        assert.deepStrictEqual(actualSDOptions, expectedSDOptions);
+        assert.deepStrictEqual(actualBUOptions, expectedBUOptions);
         console.log('Dropdown options match expected values!');
 
         const screenshotPath = await takeScreenshot(driver, 'test_006');
