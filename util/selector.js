@@ -2,7 +2,7 @@ const { By } = require('selenium-webdriver');
 const data = require('../data/inputData');
 
 const sideMenu = {
-    internalActivity: By.xpath("//a[.//span[normalize-space()='Internal Activity']]"),
+    internalActivity: By.xpath(`/html/body/div/div/div/div[1]/div/div/div[3]/ul/li[3]/a/span`),
     resourceAlloc: By.xpath(`/html/body/div/div/div/div[1]/div/div/div[3]/ul/li[1]/a/span`),
     burgerIcon: By.xpath(`//button[contains(@class, 'Hamburger') and contains(@class, 'btn-outline-secondary')]`)
 };
@@ -162,12 +162,34 @@ const internalActivity = {
    sdGrp: By.xpath("//button[.//span[text()='SD Group']]"),
    bu: By.xpath("//div[@role='combobox' and contains(@id,'departmentGroupMappingId')]"),
    category:By.xpath("//div[@role='combobox' and contains(@id,'internalOperationsCategoryId')]"),
-   status: By.xpath("//button[.//span[text()='Status']]")
+   status: By.xpath("//button[.//span[text()='Status']]"),
+};
+
+const RPM_InterActiv = {
+    BTN:{
+        clearAllFilter: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/button`),
+        exportBTN: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/div/div/div/div[1]/button`),
+        createNewBtn: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/div/div/div/div[2]/button`),
+        SDclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div[1]/button`),
+        BUclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[2]/div/div/div[1]/button`),
+        CATclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[3]/div/div/div[1]/button`),
+        STATclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[4]/div/div/div[1]/button`),
+    },
+    TXTBX:{
+        searchBox: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/input`),
+    },
+    DRPDWN:{
+
+    },
+    TBL:{
+        header: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div/div`),
+    },
 };
 
 module.exports = {
     sideMenu,
     loginSelectors,
     internalActivity,
-    RPM_ResAlloc
+    RPM_ResAlloc,
+    RPM_InterActiv,
 };

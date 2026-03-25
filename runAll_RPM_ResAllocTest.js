@@ -38,7 +38,7 @@ const {
      IT_063,
      IT_064,
      IT_066,
-     IT_068} = require('./tests/RPM_ResAlloc');
+     IT_068} = require('./rpm-resource-allocation/RPM_ResAlloc');
 
 (async () => {
     await IT_001();

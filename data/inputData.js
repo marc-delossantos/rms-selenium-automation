@@ -190,6 +190,9 @@ const inputData = {
 
   searchSampData:{
     searchKeyword1:'Marc Jeffson',
+  },
+  IAtable:{
+    Header:['Action','Activty Name','Category','Description','Total Allocation','Tech Stack','Start','End','SD','BU','Status',],
   }
 
 

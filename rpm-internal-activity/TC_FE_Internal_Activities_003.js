@@ -1,0 +1,117 @@
+const { Builder, By, until, } = require('selenium-webdriver');
+const data = require('../data/inputData');
+const { login } = require('../util/login');
+const assert = require('assert');
+const { sideMenu } = require('../util/selector');
+const { RPM_InterActiv } = require('../util/selector');
+const { writeResult } = require('../util/excelReporter');
+const { takeScreenshot } = require('../util/screenshot');
+
+
+async function IT_002() {
+      let driver;
+    try {
+        driver = await new Builder().forBrowser('chrome').build();
+        await driver.manage().window().maximize();
+
+        await login(driver); //go login
+
+        const sideMenuIA = await driver.findElement(sideMenu.internalActivity);
+        await sideMenuIA.click();
+
+        // --- Wait for Resource & Project Management / Internal Activity
+        await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
+        await driver.sleep(1000);
+
+        const FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='SD Group']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await FilterLabel.getText()).trim(),"SD Group");
+        console.log(" SD Group filter label is correct");
+
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Unit']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await FilterLabel.getText()).trim(),"Business Unit");
+        console.log(" Business Unit filter label is correct");
+
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Category']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await FilterLabel.getText()).trim(),"Category");
+        console.log(" Category filter label is correct");
+
+        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Status']"));
+        assert.strictEqual(await FilterLabel.isDisplayed(), true);
+        assert.strictEqual(
+            (await FilterLabel.getText()).trim(),"Status");
+        console.log(" Status filter label is correct");
+
+        const exportBtn = await driver.findElement(RPM_InterActiv.BTN.exportBTN);
+        assert.strictEqual(await exportBtn.isDisplayed(), true);
+        assert.strictEqual(await exportBtn.isEnabled(), true);
+        console.log(" Export Excel button is present");
+
+        const createNewBtn = await driver.findElement(RPM_InterActiv.BTN.exportBTN);
+        assert.strictEqual(await createNewBtn.isDisplayed(), true);
+        assert.strictEqual(await createNewBtn.isEnabled(), true);
+        console.log(" Create New button is present");
+
+        const searchBox = await driver.wait(
+            until.elementLocated(RPM_InterActiv.TXTBX.searchBox),
+            5000);
+        assert.strictEqual(await searchBox.isDisplayed(), true);
+        assert.strictEqual(await searchBox.isEnabled(), true);
+        console.log(" Search box is present and ready for input");
+
+        const clearFilterBtn = await driver.findElement(RPM_InterActiv.BTN.clearAllFilter);
+        assert.strictEqual(await clearFilterBtn.isDisplayed(), true);
+        assert.strictEqual(await clearFilterBtn.isEnabled(), true);
+        console.log(" Clear All Filters button is present");
+
+        const burgerIcon = await driver.wait(
+        until.elementLocated(sideMenu.burgerIcon),5000);
+        const isDisplayed = await burgerIcon.isDisplayed();
+        console.log("Burger button present:", isDisplayed );
+
+        const IATableHeaders = await driver.findElements(RPM_InterActiv.TBL.header);
+
+        const expectedIATableHeaders = data.IAtable.header;
+        const actualIATableHeaders = [];
+        for (const option of IATableHeaders) {
+            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
+
+            let text = (await option.getText()).trim();
+
+            if (text.endsWith('+')) {
+                text = text.slice(0, -1).trim();
+            }
+
+            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
+            actualIATableHeaders.push(...items); // push each item separately
+        }
+
+        assert.deepStrictEqual(actualIATableHeaders, expectedIATableHeaders);
+        console.log('Table Headers match expected values!');
+
+        const screenshotPath = await takeScreenshot(driver, 'test_002');
+        await writeResult('RPM:InterActiv_test_IT_002', 'PASS', screenshotPath);
+        
+    } catch (error) {
+        console.error('test failed:', error.message);
+        let screenshotPath;
+        if (driver) {
+            screenshotPath = await takeScreenshot(driver, 'test_002');
+            await writeResult('RPM:InterActiv_test_IT_002', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+        }
+    }finally {
+        if (driver) {
+            await driver.sleep(3000);
+            await driver.quit();
+        }
+    }
+}
+
+module.exports = { 
+     IT_002,
+    };
