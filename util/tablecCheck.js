@@ -3,37 +3,60 @@ const { By } = require('selenium-webdriver');
 async function tableCheck(driver, tableXPath, headerName, valueMatch) {
     const tableElement = await driver.findElement(tableXPath);
 
-    // Get headers
-    const headers = await tableElement.findElements(By.css('div[role="columnheader"]'));
-    let columnIndex = -1;
-    for (let i = 0; i < headers.length; i++) {
-        const text = ((await headers[i].getText()) || '').trim();
-        if (text === headerName) {
-            columnIndex = i;
-            break;
-        }
-    }
-    if (columnIndex === -1) throw new Error(`Column "${headerName}" not found`);
+    // Find header by text
+    const header = await tableElement.findElement(
+        By.xpath(`.//div[@role="columnheader"]//div[text()="${headerName}"]/ancestor::div[@role="columnheader"]`)
+    );
 
-    // Find scrollable container
-    const scrollContainer = await tableElement.findElement(By.css('.MuiDataGrid-virtualScroller'));
+    const field = await header.getAttribute('data-field');
+
+    // Scroll container
+    const scrollContainer = await tableElement.findElement(
+        By.css('.MuiDataGrid-virtualScroller')
+    );
 
     let lastScrollTop = -1;
     let reachedBottom = false;
     const checkedRows = new Set();
 
     while (!reachedBottom) {
-        const rows = await scrollContainer.findElements(By.css('div[role="row"][aria-rowindex]'));
+        const rows = await scrollContainer.findElements(
+            By.css('div[role="row"][aria-rowindex]')
+        );
 
         for (let row of rows) {
-            const rowIndex = await row.getAttribute('aria-rowindex');
-            if (checkedRows.has(rowIndex)) continue; // skip already checked rows
+            const rowIndex = parseInt(await row.getAttribute('aria-rowindex'));
+
+            //Skip header / invalid rows
+            if (!rowIndex || rowIndex <= 1) continue;
+
+            if (checkedRows.has(rowIndex)) continue;
             checkedRows.add(rowIndex);
 
-            const cells = await row.findElements(By.css('div[role="cell"]'));
-            if (!cells[columnIndex]) throw new Error(`Row ${rowIndex}: Column "${headerName}" cell not found`);
-            const cellText = ((await cells[columnIndex].getText()) || '').trim();
-            if (cellText !== valueMatch) throw new Error(`Row ${rowIndex}: Expected "${valueMatch}", found "${cellText}"`);
+            // Use data-field
+            const cell = await row.findElement(By.css(`div[data-field="${field}"]`));
+
+            let rawText = await driver.executeScript(
+                "return arguments[0].textContent;",
+                cell
+            );
+
+            let cellText = (rawText || '').trim();
+
+            if (!cellText) {
+                const titleText = await cell.getAttribute('title');
+                if (titleText) {
+                    cellText = titleText.trim();
+                }
+            }
+
+
+            // Assertion
+            if (cellText !== valueMatch) {
+                throw new Error(
+                    `Row ${rowIndex}: Expected "${valueMatch}", found "${cellText}"`
+                );
+            }
         }
 
         // Scroll down
@@ -42,10 +65,10 @@ async function tableCheck(driver, tableXPath, headerName, valueMatch) {
             scrollContainer
         );
 
-        if (scrollTop === lastScrollTop) reachedBottom = true; // reached bottom
+        if (scrollTop === lastScrollTop) reachedBottom = true;
         else lastScrollTop = scrollTop;
 
-        await driver.sleep(200); // wait for rows to render
+        await driver.sleep(200);
     }
 
     console.log(` All rows under column "${headerName}" match "${valueMatch}"`);
