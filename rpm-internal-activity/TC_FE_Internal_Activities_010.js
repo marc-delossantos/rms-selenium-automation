@@ -1,7 +1,6 @@
 const { Builder, By, until, } = require('selenium-webdriver');
 const data = require('../data/inputData');
 const { login } = require('../util/login');
-const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_InterActiv } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');

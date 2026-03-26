@@ -2,7 +2,8 @@ const { Builder, By, until } = require('selenium-webdriver');
 
 async function clickUntil(driver,path){
 
-    const button = await driver.findElement(path);
+    let button = await driver.findElement(path);
+     await driver.executeScript("arguments[0].scrollIntoView(true);", button);
 
     while (true) {
         const isEnabled = await button.isEnabled();
@@ -13,6 +14,7 @@ async function clickUntil(driver,path){
         }
 
         await button.click();
+        await driver.sleep(500);
         // wait for UI update (important)
     }
 }

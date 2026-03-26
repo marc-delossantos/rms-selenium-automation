@@ -25,7 +25,6 @@ async function IT_007() {
         const CATDropdown = await driver.findElement(RPM_InterActiv.DRPDWN.CATDropdown);
         await CATDropdown.click();
 
-        const dropdownPanel = await driver.findElement(RPM_InterActiv.DRPDWN.CATOptions);
         const CATOptions = await driver.findElements(RPM_InterActiv.DRPDWN.CATOptions);
 
         const expectedCATOptions = data.dropdown.category;
@@ -39,8 +38,7 @@ async function IT_007() {
             }
 
             const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
-            actualCATOptions.push(...items); // push each item separately
-            await driver.executeScript(`arguments[0].scrollTop = arguments[1].offsetTop;`, dropdownPanel, option);
+            actualCATOptions.push(...items); // push each item separately;
         }
 
         assert.deepStrictEqual(actualCATOptions, expectedCATOptions);

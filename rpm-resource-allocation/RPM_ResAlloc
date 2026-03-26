@@ -391,11 +391,13 @@ async function IT_008() {
         await driver.sleep(5000);
 
         for (let i = 3; i <= 25; i++) {
-            const sort = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]`;
-            const selectSort = await driver.findElement(By.xpath(sort));
+            let sort = `/html/body/div/div/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/div[1]/div/div/div[${i}]`;
+            let selectSort = await driver.wait(until.elementLocated(By.xpath(sort)),10000);
 
-            await selectSort.click();
-            await driver.sleep(500);
+           await selectSort.click();  // Click the sort button
+           await driver.sleep(500);  // Wait for UI to update
+           await selectSort.click();  // Click the sort button again
+           await driver.sleep(500);  // Wait for UI to update again
     }
 
         const screenshotPath = await takeScreenshot(driver, 'test_008');

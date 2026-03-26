@@ -174,6 +174,8 @@ const RPM_InterActiv = {
         BUclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[2]/div/div/div[1]/button`),
         CATclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[3]/div/div/div[1]/button`),
         STATclearDrp: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[4]/div/div/div[1]/button`),
+        pageFwd: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div[3]/button[2]`),
+        pageBck: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div[3]/button[1]`),
     },
     TXTBX:{
         searchBox: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/input`),

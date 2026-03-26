@@ -3,11 +3,12 @@ const data = require('../data/inputData');
 const { login } = require('../util/login');
 const { sideMenu } = require('../util/selector');
 const { RPM_InterActiv } = require('../util/selector');
+const { clickUntil } = require('../util/clickButtonUntil');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
-const { tableCheck } = require('../util/tablecCheck');
 
-async function IT_009() {
+
+async function IT_015() {
       let driver;
     try {
         driver = await new Builder().forBrowser('chrome').build();
@@ -22,25 +23,20 @@ async function IT_009() {
         await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
         await driver.sleep(5000);
 
-        const SDDropdown = await driver.findElement(RPM_InterActiv.DRPDWN.SDDropdown);
-        await SDDropdown.click();
-        const SDClearBtn = await driver.findElement(RPM_InterActiv.BTN.SDclearDrp);
-        await SDClearBtn.click();
-        const selectSD1 = await driver.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div/div[1]/div/div/div[2]/div[2]/span`))
-        await selectSD1.click();
+        await clickUntil(driver,RPM_InterActiv.BTN.pageFwd);
         await driver.sleep(500);
-        
-        await tableCheck(driver,RPM_InterActiv.TBL.table,'SD','SD1');
+        await clickUntil(driver,RPM_InterActiv.BTN.pageBck);
+        await driver.sleep(500);
 
-        const screenshotPath = await takeScreenshot(driver, 'test_009');
-        await writeResult('RPM:InterActiv_test_IT_009', 'PASS', screenshotPath);
+        const screenshotPath = await takeScreenshot(driver, 'test_015');
+        await writeResult('RPM:InterActiv_test_IT_015', 'PASS', screenshotPath);
         
     } catch (error) {
         console.error('test failed:', error.message);
         let screenshotPath;
         if (driver) {
-            screenshotPath = await takeScreenshot(driver, 'test_009');
-            await writeResult('RPM:InterActiv_test_IT_009', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
+            screenshotPath = await takeScreenshot(driver, 'test_015');
+            await writeResult('RPM:InterActiv_test_IT_015', 'FAILED', screenshotPath, error.message); // <-- Include screenshot for FAIL
         }
     }finally {
         if (driver) {
@@ -51,5 +47,5 @@ async function IT_009() {
 }
 
 module.exports = { 
-     IT_009,
+     IT_015,
     };

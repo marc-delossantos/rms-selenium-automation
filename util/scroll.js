@@ -16,7 +16,7 @@ async function scrollTopBot(driver, element) {
             lastScrollTop = scrollTop;
         }
 
-        await driver.sleep(200);
+        await driver.sleep(2000);
     }
 }
 
@@ -36,7 +36,7 @@ async function scrollLeftRight(driver, element) {
             lastScrollLeft = scrollLeft;
         }
 
-        await driver.sleep(200); // small pause for smooth scrolling or lazy-loaded content
+        await driver.sleep(2000); // small pause for smooth scrolling or lazy-loaded content
     }
 }
 
