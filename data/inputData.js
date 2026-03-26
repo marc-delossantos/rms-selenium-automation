@@ -183,6 +183,7 @@ const inputData = {
   },
   IAtable:{
     Header:['Action','Activity Name','Category','Description','Total Allocation','Tech Stack','Start','End','SD','BU','Status',],
+    HeaderNew:['Action','Technology'],
   }
 
 

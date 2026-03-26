@@ -15,10 +15,14 @@ const {IT_014} = require('./rpm-internal-activity/TC_FE_Internal_Activities_014'
 const {IT_015} = require('./rpm-internal-activity/TC_FE_Internal_Activities_015');
 const {IT_016} = require('./rpm-internal-activity/TC_FE_Internal_Activities_016');
 const {IT_017} = require('./rpm-internal-activity/TC_FE_Internal_Activities_017');
+const {IT_018} = require('./rpm-internal-activity/TC_FE_Internal_Activities_018');
+const {IT_019} = require('./rpm-internal-activity/TC_FE_Internal_Activities_019');
+const {IT_021} = require('./rpm-internal-activity/TC_FE_Internal_Activities_021');
+const {IT_022} = require('./rpm-internal-activity/TC_FE_Internal_Activities_022');
 
 (async () => {
     // await IT_001();
-    // await IT_003();
+    await IT_003();
     // await IT_004();
     // await IT_005();
     // await IT_006();
@@ -32,7 +36,11 @@ const {IT_017} = require('./rpm-internal-activity/TC_FE_Internal_Activities_017'
     // await IT_014();
     // await IT_015();
     // await IT_016();
-    await IT_017();
+    // await IT_017();
+    // await IT_018();
+    // await IT_019();
+    // await IT_021();
+    // await IT_022();
     
 })();
     

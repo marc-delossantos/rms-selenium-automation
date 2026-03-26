@@ -4,6 +4,7 @@ const { login } = require('../util/login');
 const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_InterActiv } = require('../util/selector');
+const { headerCheck } = require('../util/tableHeaderColumnCheck');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -80,25 +81,10 @@ async function IT_003() {
         const isDisplayed = await burgerIcon.isDisplayed();
         console.log("Burger button present:", isDisplayed );
 
-        const IATableHeaders = await driver.findElements(RPM_InterActiv.TBL.header);
-
-        const expectedIATableHeaders = data.IAtable.Header;
-        const actualIATableHeaders = [];
-        for (const option of IATableHeaders) {
-            await driver.executeScript("arguments[0].scrollIntoView(true);", option);
-
-            let text = (await option.getText()).trim();
-
-            if (text.endsWith('+')) {
-                text = text.slice(0, -1).trim();
-            }
-
-            const items = text.split('\n').map(t => t.trim()).filter(t => t !== 'N/A' && t.length > 0);
-            actualIATableHeaders.push(...items); // push each item separately
-        }
-
-        assert.deepStrictEqual(actualIATableHeaders, expectedIATableHeaders);
-        console.log('Table Headers match expected values!');
+        //table header check
+        const tableHeader = RPM_InterActiv.TBL.header;
+        const headerColumn = data.IAtable.Header;
+        await headerCheck(driver,tableHeader,headerColumn);
 
         const screenshotPath = await takeScreenshot(driver, 'test_003');
         await writeResult('RPM:InterActiv_test_IT_003', 'PASS', screenshotPath);

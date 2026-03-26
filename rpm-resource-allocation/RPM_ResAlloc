@@ -4,6 +4,8 @@ const { login } = require('../util/login');
 const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_ResAlloc } = require('../util/selector');
+const { resizeScreen } = require('../util/resizeScreen');
+const { checkDownloadFile } = require('../util/checkDownloadFile');
 const { writeResult } = require('../util/excelReporter');
 const { clickUntil } = require('../util/clickButtonUntil');
 const { takeScreenshot } = require('../util/screenshot');
@@ -58,7 +60,7 @@ async function IT_002() {
 
         // check elements
 
-        const FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
+        let FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Units']"));
         assert.strictEqual(await FilterLabel.isDisplayed(), true);
         assert.strictEqual(
             (await FilterLabel.getText()).trim(),"Business Units");
@@ -482,19 +484,7 @@ async function IT_010() {
         await driver.wait(until.urlContains('resource-allocation'), 10000); //wait for screen to load
         await driver.sleep(5000);
 
-        const resizeTimes = 10;
-
-        for (let t = 0; t < resizeTimes; t++) {
-
-            const randomWidth = Math.floor(Math.random() * (1920 - 300 + 1)) + 300;   
-            const randomHeight = Math.floor(Math.random() * (1080 - 300 + 1)) + 300;  
-
-            await driver.manage().window().setRect({ width: randomWidth, height: randomHeight });
-            console.log(`Resized window to ${randomWidth}x${randomHeight}`);
-            await driver.sleep(3000);
-        }
-        // Finally, maximize the window again
-        await driver.manage().window().maximize();
+        await resizeScreen(driver);
 
         const screenshotPath = await takeScreenshot(driver, 'test_010');
         await writeResult('RPM:ResAlloc_test_IT_010', 'PASS', screenshotPath);
@@ -531,6 +521,8 @@ async function IT_011() {
 
         const exportFile = await driver.findElement(RPM_ResAlloc.BTN.exportBtn);
         await exportFile.click();
+
+        await checkDownloadFile(driver,'Resource Allocation','marc.delossantos');
 
         const screenshotPath = await takeScreenshot(driver, 'test_011');
         await writeResult('RPM:ResAlloc_test_IT_011', 'PASS', screenshotPath);

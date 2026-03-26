@@ -1,7 +1,7 @@
 const { Builder, By, until, } = require('selenium-webdriver');
 const data = require('../data/inputData');
 const { login } = require('../util/login');
-const { sideMenu, RPM_InterActiv } = require('../util/selector');
+const { sideMenu } = require('../util/selector');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -26,11 +26,12 @@ async function IT_017() {
         const selectResize = await driver.wait(until.elementLocated(By.xpath(resize)),10000);
         const columnResizeHandle = await selectResize.findElement(By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div/div/div[${i}]/div[2]`));
 
-        const randomWidth = Math.floor(Math.random() * (0 - 300 + 30)) + 1;
+        let randomWidth = Math.floor(Math.random() * (-10 - 300 + 1)) + 50;
 
         await driver.actions({ bridge: true })
             .dragAndDrop(columnResizeHandle, { x: randomWidth, y: 0 })
             .perform();
+
 
         console.log(`Column ${i} resized by ${randomWidth} pixels`);
         await driver.sleep(500);

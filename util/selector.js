@@ -196,6 +196,47 @@ const RPM_InterActiv = {
         tableName: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[3]`),
         table:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div`),
     },
+    SUBMENU:{
+        NEW:{
+            HLINK:{
+                InternalActivity: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/nav/ol/li[3]/a`),
+                Rpm: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/nav/ol/li[2]/a`),
+                Home: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/nav/ol/li[1]/a`)
+            },
+            Label:{
+                IAName:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/p`), //Internal Activity Name *
+                Date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/p`), //Dates *
+                Category: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[2]/p`), //Category *
+                BU: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/p`), //Business Unit *
+                Remarks: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/p`), // Remarks
+            },
+            BTN:{
+                Cancel: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/button[1]`),
+                Save: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/button[2]`),
+                Assign: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[3]/div[1]/button`),
+                pageBck: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[3]/div[2]/div/div[2]/div[2]/div/div[3]/button[1]`),
+                pageFwd: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div[2]/div/div[2]/div[2]/div/div[3]/button[2]`),
+            },
+            DRPDWN:{
+                Category: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[2]/div/div/div`),
+                BU: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/div`),
+                rowCount: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[3]/div[2]/div/div[2]/div[2]/div/div[2]/div`),
+            },
+            TXTBX:{
+                InternalActivity:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/div/input`),
+                Date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/input`),
+                Remarks: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/div/div/textarea[1]`),
+                techSearch: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div[1]/div/div/div/input`),
+            },
+            TBL: {
+                table: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[3]/div[2]/div/div[1]`),
+                headerColumn: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[3]/div[2]/div/div[1]/div[2]/div[1]/div/div`),
+            },
+        },
+        UPDATE:{
+
+        },
+    },
 };
 
 module.exports = {
