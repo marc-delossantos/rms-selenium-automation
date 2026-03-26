@@ -50,7 +50,6 @@ async function tableCheck(driver, tableXPath, headerName, valueMatch) {
                 }
             }
 
-
             // Assertion
             if (cellText !== valueMatch) {
                 throw new Error(
