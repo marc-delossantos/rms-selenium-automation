@@ -196,6 +196,12 @@ const RPM_InterActiv = {
         tableName: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[3]`),
         table:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/div`),
     },
+    Label:{
+        SD:By.xpath("//span[normalize-space()='SD Group']"),
+        BU:By.xpath("//span[normalize-space()='Business Unit']"),
+        Category: By.xpath("//span[normalize-space()='Category']"),
+        Status:By.xpath("//span[normalize-space()='Status']"),
+            },
     SUBMENU:{
         NEW:{
             HLINK:{
@@ -204,11 +210,11 @@ const RPM_InterActiv = {
                 Home: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[1]/div/div/nav/ol/li[1]/a`)
             },
             Label:{
-                IAName:By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/p`), //Internal Activity Name *
-                Date: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[1]/p`), //Dates *
-                Category: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[2]/p`), //Category *
-                BU: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/p`), //Business Unit *
-                Remarks: By.xpath(`/html/body/div/div/div/div[2]/div/div/div[2]/div[1]/div[2]/div[2]/p`), // Remarks
+                IAName:By.xpath(`//p[contains(text(),'Internal Activity Name *')]`), //Internal Activity Name *
+                Date: By.xpath(`//p[contains(text(),'Dates *')]`), //Dates *
+                Category: By.xpath(`//p[contains(text(),'Category *')]`), //Category *
+                BU: By.xpath(`//p[contains(text(),'Business Unit *')]`), //Business Unit *
+                Remarks: By.xpath(`//p[contains(text(),'Remarks')]`), // Remarks
             },
             BTN:{
                 Cancel: By.xpath (`/html/body/div/div/div/div[2]/div/div/div[2]/div[2]/button[1]`),

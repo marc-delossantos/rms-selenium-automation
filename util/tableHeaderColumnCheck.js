@@ -1,3 +1,4 @@
+const assert = require('assert');
 
 async function headerCheck(driver,target,headerColumns) {
 

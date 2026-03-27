@@ -1,8 +1,10 @@
 const { Builder, By, until, } = require('selenium-webdriver');
 const { login } = require('../util/login');
 const data = require('../data/inputData');
+const assert = require('assert');
 const { sideMenu, RPM_InterActiv } = require('../util/selector');
 const { headerCheck } = require('../util/tableHeaderColumnCheck');
+const { labelCheck } = require('../util/textCheck');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
 
@@ -25,35 +27,11 @@ async function IT_022() {
         const createNewBTN = await driver.findElement(RPM_InterActiv.BTN.createNewBtn);
         await createNewBTN.click();
 
-        let FilterLabel = await driver.findElement(By.xpath(RPM_InterActiv.SUBMENU.NEW.Label.internalActivity));
-                assert.strictEqual(await FilterLabel.isDisplayed(), true);
-                assert.strictEqual(
-                    (await FilterLabel.getText()).trim(),"Internal Activity Name *");
-                console.log(" Internal Activity Name * filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath(RPM_InterActiv.SUBMENU.NEW.Label.Date));
-                assert.strictEqual(await FilterLabel.isDisplayed(), true);
-                assert.strictEqual(
-                    (await FilterLabel.getText()).trim(),"Dates *");
-                console.log(" Dates * filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath(RPM_InterActiv.SUBMENU.NEW.Label.Category));
-                assert.strictEqual(await FilterLabel.isDisplayed(), true);
-                assert.strictEqual(
-                    (await FilterLabel.getText()).trim(),"Category *");
-                console.log(" Category * filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath(RPM_InterActiv.SUBMENU.NEW.Label.BU));
-                assert.strictEqual(await FilterLabel.isDisplayed(), true);
-                assert.strictEqual(
-                    (await FilterLabel.getText()).trim(),"Business Unit *");
-                console.log(" Business Unit * filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath(RPM_InterActiv.SUBMENU.NEW.Label.Remarks));
-                assert.strictEqual(await FilterLabel.isDisplayed(), true);
-                assert.strictEqual(
-                    (await FilterLabel.getText()).trim(),"Remarks");
-                console.log(" Remarks filter label is correct");
+        await labelCheck(driver,RPM_InterActiv.SUBMENU.NEW.Label.IAName,'Internal Activity Name *');
+        await labelCheck(driver,RPM_InterActiv.SUBMENU.NEW.Label.Date,'Dates *');
+        await labelCheck(driver,RPM_InterActiv.SUBMENU.NEW.Label.Category,'Category *');
+        await labelCheck(driver,RPM_InterActiv.SUBMENU.NEW.Label.BU,'Business Unit *');
+        await labelCheck(driver,RPM_InterActiv.SUBMENU.NEW.Label.Remarks,'Remarks');
 
         const cancelBtn = await driver.wait(
             until.elementLocated(RPM_InterActiv.SUBMENU.NEW.BTN.Cancel),
@@ -63,7 +41,7 @@ async function IT_022() {
         console.log(" cancelBtn is present ");
 
         const saveBtn = await driver.wait(
-            until.elementLocated(RPM_InterActiv.SUBMENU.NEW.BTN.saveBtn),
+            until.elementLocated(RPM_InterActiv.SUBMENU.NEW.BTN.Save),
             5000);
         assert.strictEqual(await saveBtn.isDisplayed(), true);
         assert.strictEqual(await saveBtn.isEnabled(), true);

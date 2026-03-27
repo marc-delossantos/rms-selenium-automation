@@ -19,10 +19,12 @@ const {IT_018} = require('./rpm-internal-activity/TC_FE_Internal_Activities_018'
 const {IT_019} = require('./rpm-internal-activity/TC_FE_Internal_Activities_019');
 const {IT_021} = require('./rpm-internal-activity/TC_FE_Internal_Activities_021');
 const {IT_022} = require('./rpm-internal-activity/TC_FE_Internal_Activities_022');
+const {IT_023} = require('./rpm-internal-activity/TC_FE_Internal_Activities_023');
+const {IT_024} = require('./rpm-internal-activity/TC_FE_Internal_Activities_024');
 
 (async () => {
     // await IT_001();
-    await IT_003();
+    // await IT_003();
     // await IT_004();
     // await IT_005();
     // await IT_006();
@@ -41,6 +43,8 @@ const {IT_022} = require('./rpm-internal-activity/TC_FE_Internal_Activities_022'
     // await IT_019();
     // await IT_021();
     // await IT_022();
+    // await IT_023();
+    await IT_024();
     
 })();
     

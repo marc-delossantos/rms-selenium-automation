@@ -4,6 +4,7 @@ const { login } = require('../util/login');
 const assert = require('assert');
 const { sideMenu } = require('../util/selector');
 const { RPM_InterActiv } = require('../util/selector');
+const { labelCheck } = require('../util/textCheck');
 const { headerCheck } = require('../util/tableHeaderColumnCheck');
 const { writeResult } = require('../util/excelReporter');
 const { takeScreenshot } = require('../util/screenshot');
@@ -24,29 +25,10 @@ async function IT_003() {
         await driver.wait(until.urlContains('internal-activities'), 10000); //wait for screen to load
         await driver.sleep(1000);
 
-        let FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='SD Group']"));
-        assert.strictEqual(await FilterLabel.isDisplayed(), true);
-        assert.strictEqual(
-            (await FilterLabel.getText()).trim(),"SD Group");
-        console.log(" SD Group filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Business Unit']"));
-        assert.strictEqual(await FilterLabel.isDisplayed(), true);
-        assert.strictEqual(
-            (await FilterLabel.getText()).trim(),"Business Unit");
-        console.log(" Business Unit filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Category']"));
-        assert.strictEqual(await FilterLabel.isDisplayed(), true);
-        assert.strictEqual(
-            (await FilterLabel.getText()).trim(),"Category");
-        console.log(" Category filter label is correct");
-
-        FilterLabel = await driver.findElement(By.xpath("//span[normalize-space()='Status']"));
-        assert.strictEqual(await FilterLabel.isDisplayed(), true);
-        assert.strictEqual(
-            (await FilterLabel.getText()).trim(),"Status");
-        console.log(" Status filter label is correct");
+        await labelCheck(driver,RPM_InterActiv.Label.SD,'SD Group');
+        await labelCheck(driver,RPM_InterActiv.Label.BU,'Business Unit');
+        await labelCheck(driver,RPM_InterActiv.Label.Category,'Category');
+        await labelCheck(driver,RPM_InterActiv.Label.Status,'Status');
 
         const exportBtn = await driver.wait(until.elementLocated(RPM_InterActiv.BTN.exportBTN),10000);
         await driver.wait(until.elementIsVisible(exportBtn), 5000);
